@@ -108,6 +108,103 @@ CREATE TABLE PartTimeEmployee(
 	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
     CONSTRAINT ptemp_pk PRIMARY KEY (eID)
 );
+/* --------------------------- END EMPLOYEE SECTION --------------------------- */
+/* --------------------------- CHEQUE/ORDER SECTION --------------------------- */
+/* Creates Cheque Table
+	Holds the cheque ID, customer ID, payment type, check date, and amount of Miming's Money used*/
+CREATE TABLE Cheque(
+	/*chequeID: the ID of the cheque*/
+	chequeID int NOT NULL,
+    /*custID: the ID of the customer associated with the cheque*/
+	custID int NOT NULL,
+    /*payment: the method of payment that the customer uses to pay the cheque*/
+    payment ENUM ('cash', 'debit', 'credit') NOT NULL, /* SET TRIGGER FOR THIS */
+    /*payment varchar(20) CHECK (payment IN('cash', 'debit', 'credit')),*/
+    /*chequeDate: the day the check was made*/
+    chequeDate DATE NOT NULL,
+    /*mimingMoneyUsed: the amount of Miming's Money used in this transaction*/
+    mimingMoneyUsed float NOT NULL,
+    
+    CONSTRAINT cheque_pk PRIMARY KEY (chequeID)
+);
+/* Creates Orders Table
+	Holds the order ID and cheque ID*/
+CREATE TABLE Orders(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    /*chequeID: the ID of the cheque*/
+    chequeID int NOT NULL,
+    
+    CONSTRAINT order_fk_1 FOREIGN KEY (chequeID) REFERENCES Cheque (chequeID),
+    CONSTRAINT order_pk PRIMARY KEY (orderID)
+);
+/* Creates Web Order Table
+	Holds the order ID*/
+CREATE TABLE WebOrder(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    
+    CONSTRAINT worder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
+    CONSTRAINT worder_pk PRIMARY KEY (orderID)
+);
+/* Creates To Go Order Table
+	Holds the order ID*/
+CREATE TABLE ToGoOrder(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    /*orderTime: the time at which the order has been made*/
+    orderTime TIME NOT NULL, /*HH:MM:SS format*/
+    /*orderTimeReady: the time at which the order is ready for pickup*/
+    orderTimeReady TIME NOT NULL,
+    
+    CONSTRAINT toorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
+    CONSTRAINT toorder_pk PRIMARY KEY (orderID)
+);
+/* Creates Dien In Order Table
+	Holds the order ID, the seat number, and the tabel number the order belongs to*/
+CREATE TABLE DineInOrder(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    /*seatNum: the seat number paying for the order*/
+    seatNum int NOT NULL,
+    /*tabelNum: the table the order belongs to*/
+    tableNum int NOT NULL,
+    
+    CONSTRAINT diorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
+    CONSTRAINT diorder_fk_2 FOREIGN KEY (seatNum, tableNum) REFERENCES Seat (seatNum, tableNum), /* SEAT TABLE MUST BE COMPLETED IN EMPLOYEE SECTION */
+    CONSTRAINT diroder_pk PRIMARY KEY (orderID)
+);
+/* --------------------------- END CHEQUE/ORDER SECTION --------------------------- */
+/* --------------------------- MENU ITEM + ORDERLINE SECTION --------------------------- */
+/* Creates To Order Line table
+	Holds the order ID and menu item ID*/
+CREATE TABLE OrderLine(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    /*menuItemID: the ID of the menu item associated with the order line*/
+    menuItemID int NOT NULL,
+    
+    CONSTRAINT orderline_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
+    CONSTRAINT orderline_fk_2 FOREIGN KEY (menuItemID) REFERENCES MenuItem(menuItemID),
+    CONSTRAINT orderline_pk PRIMARY KEY (orderID, menuItemID)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
