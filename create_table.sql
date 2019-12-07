@@ -85,6 +85,56 @@ CREATE TABLE CorporateRepresentative(
     CONSTRAINT corpcust_pk PRIMARY KEY (custID)
 );
 /* --------------------------- END CUSTOMER SECTION --------------------------- */
+/* --------------------------- EMPLOYEE SECTION --------------------------- */
+/* Creates Employee Table
+	Holds the employee ID, pay rate, and role name of the employee*/
+CREATE TABLE Employee(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*payRate: the amount the employee is being paid*/
+    payRate float NOT NULL,
+    /*roleName: the name of the role they are responsible for*/
+    roleName varchar(20) NOT NULL,
+    
+    CONSTRAINT emp_fk_1 FOREIGN KEY (eID) REFERENCES Person(ID),
+    CONSTRAINT emp_pk PRIMARY KEY (eID)
+);
+/* Creates Part Time Employee Table
+	Holds the employee ID*/
+CREATE TABLE PartTimeEmployee(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
+    CONSTRAINT ptemp_pk PRIMARY KEY (eID)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
