@@ -106,7 +106,10 @@ CREATE TABLE lookup_ingredient(
 CREATE TABLE Recipe(
 	/*recipeName: name of the recipe*/
 	recipeName varchar(100) NOT NULL,
+    /*eID: the ID of the Head Chef*/
+    chefID int NOT NULL,
     
+    CONSTRAINT recipe_fk_1 FORIEGN KEY (chefID) REFERENCES HeadChef (eID),
     CONSTRAINT recipe_pk PRIMARY KEY (recipeName)
 );
 /* Creates the recipe ingredient table
@@ -153,11 +156,8 @@ CREATE TABLE Cook(
 CREATE TABLE HeadChef(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
-    /*recipeName: name of the recipe that the head chef designed*/
-    recipeName varchar(100) NOT NULL,
     
 	CONSTRAINT hcook_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
-    CONSTRAINT hcook_fk_2 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
     CONSTRAINT hcook_pk PRIMARY KEY (eID)
 );
 /* Creates Line Cook Table
