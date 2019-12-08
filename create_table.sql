@@ -110,6 +110,14 @@ CREATE TABLE PartTimeEmployee(
 );
 /* --------------------------- END EMPLOYEE SECTION --------------------------- */
 /* --------------------------- CHEQUE/ORDER SECTION --------------------------- */
+/* Creates Payment Type lookup table
+	Holds the names/types of payments accepted*/
+CREATE TABLE lookup_payment(
+	/*payment: the name of the payment*/
+	payment varchar(20) NOT NULL,
+    
+    CONSTRAINT payment_pk PRIMARY KEY (payment)
+);
 /* Creates Cheque Table
 	Holds the cheque ID, customer ID, payment type, check date, and amount of Miming's Money used*/
 CREATE TABLE Cheque(
@@ -118,13 +126,13 @@ CREATE TABLE Cheque(
     /*custID: the ID of the customer associated with the cheque*/
 	custID int NOT NULL,
     /*payment: the method of payment that the customer uses to pay the cheque*/
-    payment ENUM ('cash', 'debit', 'credit') NOT NULL, /* SET TRIGGER FOR THIS */
-    /*payment varchar(20) CHECK (payment IN('cash', 'debit', 'credit')),*/
+    payment varchar(20) NOT NULL, /* SET TRIGGER FOR THIS */
     /*chequeDate: the day the check was made*/
     chequeDate DATE NOT NULL,
     /*mimingMoneyUsed: the amount of Miming's Money used in this transaction*/
     mimingMoneyUsed float NOT NULL,
     
+    CONSTRAINT cheque_fk_1 FOREIGN KEY (payment) REFERENCES lookup_payment (payment),
     CONSTRAINT cheque_pk PRIMARY KEY (chequeID)
 );
 /* Creates Orders Table
@@ -160,7 +168,7 @@ CREATE TABLE ToGoOrder(
     CONSTRAINT toorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
     CONSTRAINT toorder_pk PRIMARY KEY (orderID)
 );
-/* Creates Dien In Order Table
+/* Creates Dine In Order Table
 	Holds the order ID, the seat number, and the tabel number the order belongs to*/
 CREATE TABLE DineInOrder(
 	/*orderID: the ID of the order*/
@@ -176,6 +184,30 @@ CREATE TABLE DineInOrder(
 );
 /* --------------------------- END CHEQUE/ORDER SECTION --------------------------- */
 /* --------------------------- MENU ITEM + ORDERLINE SECTION --------------------------- */
+/* Creates Menu Type lookup table
+	Holds the names/types of menu*/
+CREATE TABLE lookup_menu(
+	/*menu: the name of the menu*/
+	menu varchar(20) NOT NULL,
+    
+    CONSTRAINT menu_pk PRIMARY KEY (menu)
+);
+/* Creates Spice Level lookup table
+	Holds the names/types of spice levels*/
+CREATE TABLE lookup_spice(
+	/*spice: the name of the spice level*/
+	spice varchar(20) NOT NULL,
+    
+    CONSTRAINT spice_pk PRIMARY KEY (spice)
+);
+/* Creates Size lookup table
+	Holds the names/types of sizes*/
+CREATE TABLE lookup_size(
+	/*size: the name of the size*/
+	size varchar(20) NOT NULL,
+    
+    CONSTRAINT size_pk PRIMARY KEY (size)
+);
 /* Creates To Menu Item table
 	Holds the menu item ID, the menu type that the item resides in, the name, the spice level,
     the size, and price of the food item*/
@@ -183,21 +215,72 @@ CREATE TABLE MenuItem(
 	/*menuItemID: the ID of the menu item associated with the order line*/
     menuItemID int NOT NULL,
     /*menuTupe: the different types of menus that the item can be on*/
-    menuType ENUM ('Evening','Lunch','Sunday Brunch Buffet', 'Children\'s') NOT NULL,
+    menuType varchar(20) NOT NULL,
     /*foodItemName: the name that it is referred to by*/
     foodItemName varchar(20) NOT NULL, /*RECIPE CLASS NEEDED*/
     /*spiceLevel: the level of spiciness that the menu item has*/
-    spiceLevel ENUM ('Mild','Tangy','Piquant','Hot','Oh My God') NOT NULL,
+    spiceLevel varchar(20) NOT NULL,
     /*size: the size of the menu item*/
-    size ENUM ('Small', 'Medium', 'Large') NOT NULL, /*SUBJECT TO CHANGE*/
+    size varchar(20) NOT NULL,
     /*price: the amount it costs to order this menu item*/
     price float NOT NULL, /* PRICE IS $0.00 FOR BUFFET ITEMS*/
     
     CONSTRAINT menuitem_fk_1 FOREIGN KEY (foodItemName) REFERENCES Recipe (rname),
+    CONSTRAINT menuitem_fk_2 FOREIGN KEY (menuType) REFERENCES lookup_menu (menu),
+    CONSTRAINT menuitem_fk_3 FOREIGN KEY (spiceLevel) REFERENCES lookup_spice (spice),
+    CONSTRAINT menuitem_fk_4 FOREIGN KEY (size) REFERENCES lookup_size (size),
     CONSTRAINT menuitem_pk PRIMARY KEY (menuItemID)
 );
-
-/* Creates To Order Line table
+/* Creates To Appetizer table
+	Holds the appetizer ID*/
+CREATE TABLE Appetizer(
+	/*appetizerID: the ID of the appetizer associated with the order line*/
+    appetizerID int NOT NULL,
+    
+    CONSTRAINT appetizer_fk_1 FOREIGN KEY (appetizerID) REFERENCES MenuItem (menuItemID),
+    CONSTRAINT appetizer_pk PRIMARY KEY (appetizerID)
+);
+/* Creates Meat lookup table
+	Holds the names/types of meat*/
+CREATE TABLE lookup_meat(
+	/*meat: the name of the meat*/
+	meat varchar(20) NOT NULL,
+    
+    CONSTRAINT meat_pk PRIMARY KEY (meat)
+);
+/* Creates Meat Entree table
+	Holds the meat entree ID and the type of meat cooked with it*/
+CREATE TABLE MeatEntree(
+	/*meatEntreeID: the ID of the entree associated with the order line*/
+    meatEntreeID int NOT NULL,
+    /*meatEntreeAddOn: the type of meat that is cooked with the meat entree*/
+    meatEntreeAddOn varchar(20) NOT NULL,
+    
+    CONSTRAINT meatentree_fk_1 FOREIGN KEY (meatEntreeID) REFERENCES MenuItem (menuItemID),
+    CONSTRAINT meatentree_fk_2 FOREIGN KEY (meatEntreeAddOn) REFERENCES lookup_meat (meat),
+    CONSTRAINT meatentree_pk PRIMARY KEY (meatEntreeID)
+);
+/* Creates Soup Volume lookup table
+	Holds the names/types of volumes that soup can come in*/
+CREATE TABLE lookup_volume(
+	/*volume: the name of the measurement that the soup can be served in*/
+	volume varchar(20) NOT NULL,
+    
+    CONSTRAINT volume_pk PRIMARY KEY (volume)
+);
+/* Creates Soup table
+	Holds the soup ID and soup volume*/
+CREATE TABLE Soup(
+	/*soupID: the ID of the soup associated with the orderline*/
+	soupID int NOT NULL,
+    /*soupVolume: he measurement that the soup is served in*/
+    soupVolume varchar(20) NOT NULL,
+    
+    CONSTRAINT soup_fk_1 FOREIGN KEY (soupID) REFERENCES MenuItem (menuItemID),
+    CONSTRAINT soup_fk_2 FOREIGN KEY (soupVolume) REFERENCES lookup_volume (volume),
+    CONSTRAINT soup_pk PRIMARY KEY (soupID)
+);
+/* Creates Order Line table
 	Holds the order ID and menu item ID*/
 CREATE TABLE OrderLine(
 	/*orderID: the ID of the order*/
