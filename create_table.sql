@@ -36,9 +36,9 @@ CREATE TABLE PublicCustomer(
 	/*custID: the ID of the customer*/
 	custID int NOT NULL,
     /*snailMailAddress: the address at which packages can be physically delivered to*/
-    snailMailAddress varchar(35) NOT NULL,
+    snailMailAddress varchar(100) NOT NULL,
     /*emailAddress: the address at which the customer can be electronincally contacted*/
-    emailAddress varchar(20) NOT NULL,
+    emailAddress varchar(100) NOT NULL,
     
     CONSTRAINT pubcust_fk_1 FOREIGN KEY (custID) REFERENCES Customer(custID),
     CONSTRAINT pubcust_pk PRIMARY KEY (custID)
@@ -47,11 +47,7 @@ CREATE TABLE PublicCustomer(
 	Holds the ID, snail-mail address, and email address of the customer. */
 CREATE TABLE PrivateCustomer(
 	/*custID: the ID of the customer*/
-	custID int NOT NULL,
-    /*snailMailAddress: the address at which packages can be physically delivered to*/
-    snailMailAddress varchar(35) NOT NULL,
-    /*emailAddress: the address at which the customer can be electronincally contacted*/
-    emailAddress varchar(20) NOT NULL,
+	custID int NOT NULL
     
     CONSTRAINT privcust_fk_1 FOREIGN KEY (custID) REFERENCES PublicCustomer(custID),
     CONSTRAINT privcust_pk PRIMARY KEY (custID)

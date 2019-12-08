@@ -1,0 +1,40 @@
+insert into PublicCustomer (custID, snailMailAddress, emailAddress) Values 
+(1,"8796 Arnold Street Cincinnati, OH 45211","rnewman@optonline.net"),
+(2,"10 Stillwater Lane
+Atlanta, GA 30303","aglassis@optonline.net"),
+(3,"9039 Arlington Road
+Coatesville, PA 19320","bulletin@outlook.com"),
+(4,"833 Cherry Hill St.
+Woonsocket, RI 02895","sarahs@yahoo.ca"),
+(5,"12 Warren Dr.
+Carmel, NY 10512","trieuvan@verizon.net"),
+(6,"36 West St Margarets Lane
+Easton, PA 18042","gslondon@me.com"),
+(7,"600 Vine Ave.
+Lincoln, NE 68506","haddawy@icloud.com"),
+(8,"104 Green Lake Dr.
+Upland, CA 91784","netsfr@yahoo.com"),
+(9,"8204 Glen Creek Ave.
+Nicholasville, KY 40356","willg@msn.com"),
+(10,"27 N. Oakwood St.
+Kalamazoo, MI 49009","weazelman@att.net"),
+(11,"7432 West Hill Field Ave.
+Glendale Heights, IL 60139","ralamosm@yahoo.ca"),
+(12,"233 Lafayette Court
+Appleton, WI 54911","dbrobins@hotmail.com"),
+(13,"9998 Roehampton Dr.
+Millville, NJ 08332","barjam@msn.com"),
+(14,"8478 Pennington Dr.
+Appleton, WI 54911","vganesh@yahoo.ca"),
+(15,"18 Applegate St.
+South Lyon, MI 48178","hauma@comcast.net"),
+(16,"91 Campfire Drive
+Concord, NH 03301","djupedal@hotmail.com"),
+(17,"846 S. Briarwood Lane
+Helena, MT 59601","research@icloud.com"),
+(18,"
+South Lyon, MI 48178
+8245 High St.
+Wakefield, MA 01880","stevelim@icloud.com"),
+(19,"771 Cedar Dr.
+Doylestown, PA 18901","munjal@comcast.net")
