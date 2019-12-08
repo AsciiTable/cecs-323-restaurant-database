@@ -113,7 +113,7 @@ CREATE TABLE FullTimeEmployee(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
     
-	CONSTRAINT ftemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
+	CONSTRAINT ftemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee (eID),
     CONSTRAINT ftemp_pk PRIMARY KEY (eID)
 );
 /* Creates Manager Table
@@ -122,7 +122,7 @@ CREATE TABLE Manager(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
     
-	CONSTRAINT manager_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee(eID),
+	CONSTRAINT manager_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee (eID),
     CONSTRAINT manager_pk PRIMARY KEY (eID)
 );
 /* Creates Cook Table
@@ -131,11 +131,11 @@ CREATE TABLE Cook(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
     
-	CONSTRAINT cook_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee(eID),
+	CONSTRAINT cook_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee (eID),
     CONSTRAINT cook_pk PRIMARY KEY (eID)
 );
 /* Creates Head Cook Table
-	Holds the employee ID*/
+	Holds the employee ID and recipe name*/
 CREATE TABLE HeadChef(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
@@ -145,6 +145,52 @@ CREATE TABLE HeadChef(
 	CONSTRAINT hcook_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
     CONSTRAINT hcook_fk_2 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
     CONSTRAINT hcook_pk PRIMARY KEY (eID)
+);
+/* Creates Line Cook Table
+	Holds employee ID and station*/
+CREATE TABLE LineCook(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*station: the station that the line cook is assigned to work at*/
+    station varchar(20) NOT NULL,
+    
+    CONSTRAINT lcook_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
+    CONSTRAINT lcook_pk PRIMARY KEY (eID, station)
+);
+/* Creates Sous Chef Table
+	Holds the employee ID*/
+CREATE TABLE SousChef(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT schef_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
+    CONSTRAINT schef_pk PRIMARY KEY (eID)
+);
+/* Creates Expertise Table
+	Holds employee ID and recipe name*/
+CREATE TABLE Expertise(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*recipeName: name of the recipe*/
+	recipeName varchar(20) NOT NULL,
+	
+    CONSTRAINT expertise_fk_1 FOREIGN KEY (eID) REFERENCES SousChef (eID),
+    CONSTRAINT expertise_fk_2 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
+    CONSTRAINT expertise_pk PRIMARY KEY (eID, recipeName)
+);
+/* Creates Mentorship Table
+	Holds recipe name, ID of the mentor, and ID of the mentee*/
+CREATE TABLE Mentorship(
+	/*recipeName: name of the recipe*/
+	recipeName varchar(20) NOT NULL,
+    /*mentorID: the employee ID of the mentor*/
+	mentorID int NOT NULL,
+    /*menteeID: the employee ID of the mentee*/
+    menteeID int NOT NULL,
+    
+    CONSTRAINT mentorship_fk_1 FOREIGN KEY (menteeID, recipeName) REFERENCES Expertise (eID, recipeName),
+    CONSTRAINT mentorship_fk_2 FOREIGN KEY (menteeID) REFERENCES SousChef (eID),
+    CONSTRAINT mentorship_pk Primary Key (recipeName, mentorID, menteeID)
 );
 /* Creates Shift Table
 	Holds the work date, shift type, ID of the chef, and ID of the manager*/
@@ -302,7 +348,7 @@ CREATE TABLE MenuItem(
     /*price: the amount it costs to order this menu item*/
     price float NOT NULL, /* PRICE IS $0.00 FOR BUFFET ITEMS*/
     
-    CONSTRAINT menuitem_fk_1 FOREIGN KEY (foodItemName) REFERENCES Recipe (rname),
+    CONSTRAINT menuitem_fk_1 FOREIGN KEY (foodItemName) REFERENCES Recipe (recipeName),
     CONSTRAINT menuitem_fk_2 FOREIGN KEY (menuType) REFERENCES lookup_menu (menu),
     CONSTRAINT menuitem_fk_3 FOREIGN KEY (spiceLevel) REFERENCES lookup_spice (spice),
     CONSTRAINT menuitem_fk_4 FOREIGN KEY (size) REFERENCES lookup_size (size),
