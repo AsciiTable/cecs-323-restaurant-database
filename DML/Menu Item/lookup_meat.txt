@@ -1,0 +1,7 @@
+insert into lookup_meat (meat) Values 
+("Chef Special"),
+("Pork"),
+("Chicken"),
+("Beef"),
+("Seafood")
+("Vegatables");

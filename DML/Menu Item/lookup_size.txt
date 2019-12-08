@@ -1,0 +1,4 @@
+insert into lookup_size (size) Values 
+("small"),
+("medium"),
+("large");

@@ -1,0 +1,4 @@
+insert into lookup_payment (payment) Values 
+("Cash"),
+("Debit Card"),
+("Credit Card");

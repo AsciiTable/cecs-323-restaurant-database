@@ -1,0 +1,6 @@
+insert into lookup_spice (spice) Values 
+("Mild"),
+("Tangy"),
+("Piquant"),
+("Hot"),
+("Oh My God");
