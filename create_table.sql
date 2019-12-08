@@ -99,7 +99,7 @@ CREATE TABLE Employee(
 	Holds the name of the ingredient*/
 CREATE TABLE lookup_ingredient(
 	/*ingredient: name of the ingredients used to make the recipe*/
-	ingredient varchar(20) NOT NULL,
+	ingredient varchar(100) NOT NULL,
     
     CONSTRAINT ingredient_pk PRIMARY KEY (ingredient)
 );
@@ -115,7 +115,7 @@ CREATE TABLE RecipeIngredient(
 	/*recipeName: name of the recipe*/
 	recipeName varchar(100) NOT NULL,
 	/*ingredient: name of the ingredients used to make the recipe*/
-    ingredient varchar (20) NOT NULL,
+    ingredient varchar (100) NOT NULL,
     
     CONSTRAINT recipeingredient_fk_1 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
     CONSTRAINT recipeingredient_fk_2 FOREIGN KEY (ingredient) REFERENCES lookup_ingredient (ingredient),
