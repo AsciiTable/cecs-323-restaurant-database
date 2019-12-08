@@ -99,12 +99,18 @@ CREATE TABLE Employee(
     CONSTRAINT emp_fk_1 FOREIGN KEY (eID) REFERENCES Person(ID),
     CONSTRAINT emp_pk PRIMARY KEY (eID)
 );
+CREATE TABLE lookup_ingredient(
+	ingredient varchar(20) NOT NULL,
+    
+    CONSTRAINT ingredient_pk PRIMARY KEY (ingredient)
+);
 CREATE TABLE Recipe( /* _----------------------------- IS INGREDIENTS NEEDED AS A SEPERATE TABLE??????__________-------*/
 	/*recipeName: name of the recipe*/
 	recipeName varchar(20) NOT NULL,
     /*ingredient: name of the ingredients used to make the recipe*/
     ingredient varchar (20) NOT NULL,
     
+    CONSTRAINT recipe_fk_1 FOREIGN KEY (ingredient) REFERENCES lookup_ingredient (ingredient),
     CONSTRAINT recipe_pk PRIMARY KEY (recipeName)
 );
 /* Creates Full Time Employee Table
@@ -230,7 +236,67 @@ CREATE TABLE PartTimeEmployee(
 	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
     CONSTRAINT ptemp_pk PRIMARY KEY (eID)
 );
-/*----------------------------------DO WAITER STUFF HERE --- I DON'T KNOW WHERE DATE AND TYPE ARE SUPPOSED TO COME FROM---------- */
+/* Creates Waiter Table
+	Holds the employee ID*/
+CREATE TABLE Waiter(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES PartTimeEmployee(eID),
+    CONSTRAINT ptemp_pk PRIMARY KEY (eID)
+);
+/* Creates Section Table
+	Holds the employee ID and section number*/
+CREATE TABLE Section(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*sectionNumber: the number that represents the given section*/
+    sectionNumber int NOT NULL,
+    
+    CONSTRAINT section_fk_1 FOREIGN KEY (eID) REFERENCES Waiter (eID),
+    CONSTRAINT section_pk PRIMARY KEY (sectionNumber)
+);
+/* Creates Resturant Table table
+	Holds the table number and the section number*/
+CREATE TABLE ResturantTable(
+	/*tableNumber: the number assigned to a given table*/
+	tableNumber int NOT NULL,
+    /*sectionNumber: the number that represetnts a given section*/
+	sectionNumber int NOT NULL,
+    
+    CONSTRAINT table_fk_1 FOREIGN KEY (sectionNumber) REFERENCES Section (sectionNumber),
+    CONSTRAINT table_pk_1 PRIMARY KEY (tableNumber, sectionNumber)
+);
+/* Creates Seat table
+	Holds the seat number, the table number, and the section number*/
+CREATE TABLE Seat(
+	/*seatNumber: the number assigned to a given seat at a table*/
+	seatNumber int NOT NULL,
+    /*tabelNumber: the number assigned to a given table*/
+	tableNumber int NOT NULL,
+    /*sectionNumber: the number that represetnts a given section*/
+    sectionNumber int NOT NULL,
+    
+    CONSTRAINT seat_fk_1 FOREIGN KEY (tableNumber, sectionNumber) REFERENCES ResturantTable (tableNumber, sectionNumber),
+    CONSTRAINT seat_pk PRIMARY KEY (seatNumber, tableNumber)
+);
+/* Creates Section Shift table
+	Holds the work date, shift type, section number, and employee ID of the waiter*/
+CREATE TABLE SectionShift(
+	/*date: the day that the employee works*/
+	workDate DATE NOT NULL,
+    /*shiftType: the type of shift that the employee works*/
+    shiftType varchar(20) NOT NULL,
+    /*sectionNumber: the number that represents the given section*/
+    sectionNumber int NOT NULL,
+    /*waiterID: the employee ID number of the given waiter*/
+    waiterID int NOT NULL,
+    
+    CONSTRAINT sectionshift_fk_1 FOREIGN KEY (workDate, shiftType, waiterID) REFERENCES WorkSchedule (workDate, shiftType, eID),
+    CONSTRAINT sectionshift_fk_2 FOREIGN KEY (sectionNumber) REFERENCES Section (sectionNumber),
+    CONSTRAINT sectionshift_fk_3 FOREIGN KEY (waiterID) REFERENCES Waiter(eID),
+    CONSTRAINT sectionshift_pk PRIMARY KEY (workDate, shiftType, sectionNumber)
+);
 /* --------------------------- END EMPLOYEE SECTION --------------------------- */
 /* --------------------------- CHEQUE/ORDER SECTION --------------------------- */
 /* Creates Payment Type lookup table
@@ -297,12 +363,12 @@ CREATE TABLE DineInOrder(
 	/*orderID: the ID of the order*/
 	orderID int NOT NULL,
     /*seatNum: the seat number paying for the order*/
-    seatNum int NOT NULL,
+    seatNumber int NOT NULL,
     /*tabelNum: the table the order belongs to*/
-    tableNum int NOT NULL,
+    tableNumber int NOT NULL,
     
     CONSTRAINT diorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
-    CONSTRAINT diorder_fk_2 FOREIGN KEY (seatNum, tableNum) REFERENCES Seat (seatNum, tableNum), /* SEAT TABLE MUST BE COMPLETED IN EMPLOYEE SECTION */
+    CONSTRAINT diorder_fk_2 FOREIGN KEY (seatNumber, tableNumber) REFERENCES Seat (seatNumber, tableNumber),
     CONSTRAINT diroder_pk PRIMARY KEY (orderID)
 );
 /* --------------------------- END CHEQUE/ORDER SECTION --------------------------- */
