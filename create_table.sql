@@ -13,7 +13,11 @@ CREATE TABLE lookup_ingredient(
 CREATE TABLE Recipe(
 	/*recipeName: name of the recipe*/
 <<<<<<< HEAD
+<<<<<<< HEAD
 	recipeName varchar(100) NOT NULL,
+=======
+	recipeName varchar(20) NOT NULL,
+>>>>>>> parent of 0c82016... e
     /*ingredient: name of the ingredients used to make the recipe*/
     ingredient varchar (20) NOT NULL,
 =======
