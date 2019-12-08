@@ -47,7 +47,7 @@ CREATE TABLE PublicCustomer(
 	Holds the ID, snail-mail address, and email address of the customer. */
 CREATE TABLE PrivateCustomer(
 	/*custID: the ID of the customer*/
-	custID int NOT NULL
+	custID int NOT NULL,
     
     CONSTRAINT privcust_fk_1 FOREIGN KEY (custID) REFERENCES PublicCustomer(custID),
     CONSTRAINT privcust_pk PRIMARY KEY (custID)
@@ -58,11 +58,11 @@ CREATE TABLE Corporation(
 	/*corpID: the ID of the corporation*/
 	corpID int NOT NULL,
     /*corpName: the name that the corporation is known by*/
-    corpName varchar(20) NOT NULL,
+    corpName varchar(100) NOT NULL,
     /*snailMailAddress: the address at which packages can be physically delivered to*/
-    snailMailAddress varchar(35) NOT NULL,
+    snailMailAddress varchar(100) NOT NULL,
     /*emailAddress: the address at which the customer can be electronincally contacted*/
-    emailAddress varchar(20) NOT NULL,
+    emailAddress varchar(100) NOT NULL,
     
     CONSTRAINT corp_pk PRIMARY KEY (corpID)
 );

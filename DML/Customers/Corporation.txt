@@ -1,0 +1,20 @@
+insert into Corporation (corpID, corpName, snailMailAddress, emailAddress) VALUES 
+(1, "Google", "Google Ave", "gmail@gmail.com"),
+(2, "Odds and Ends", "32 Walt Whitman St.
+Altamonte Springs, FL 32714", "oddsandends@gmail.com"),
+(3, "Handy Help", "763 El Dorado Dr.
+Winter Springs, FL 32708", "handyhelp@gmail.com"),
+(4, "Nick'S Knack", "16 N. Atlantic St.
+Mooresville, NC 28115", "nicksknack@gmail.com"),
+(5, "Here And There and Everywhere", "814 East Maiden Court
+Manchester Township, NJ 08759", "hereandthere@gmail.com"),
+(6, "E Cetera", "1 Adams Street
+Thomasville, NC 27360", "ecetera@gmail.com"),
+(7, "Closet Of Choices", "29 Clay St.
+Wisconsin Rapids, WI 54494", "closetofchoices@gmail.com"),
+(8, "Assorted Assets", "1 Hall Road
+West Bend, WI 53095", "assortedassets@gmail.com"),
+(9, "Trust Assortment", "192 Mill Ave.
+Freehold, NJ 07728", "trustassortment@gmail.com")
+
+

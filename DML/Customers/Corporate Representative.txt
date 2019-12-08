@@ -1,0 +1,12 @@
+insert into CorporateRepresentative (custID, corpID, department) values
+(11, 1, "Business"),
+(12, 2, "Marketing"),
+(13, 3, "Service"),
+(14, 4, "HR"),
+(15, 5, "Business"),
+(16, 6, "HR"),
+(17, 7, "HR"),
+(18, 8, "Business"),
+(19, 9, "Marketing")
+
+
