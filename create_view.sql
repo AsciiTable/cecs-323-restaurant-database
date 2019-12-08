@@ -43,10 +43,17 @@ ORDER BY 'Mentor First Name', 'Mentor Last Name','Mentee Last Name','Mentee Firs
 
 /*Customer_Sales_v – On a year by year basis, show how much each customer has spent at
 Miming’s.*/
-SELECT YEAR(chequeDate) AS 'YEAR', ID, fName, lName
+SELECT YEAR(chequeDate) AS 'YEAR', ID, fName, lName, SUM(price)
 FROM Cheque
 INNER JOIN Person
-On Cheque.custID = Person.ID;
+On Cheque.custID = Person.ID
+INNER JOIN Orders
+USING (chequeID)
+INNER JOIN OrderLine
+USING (orderID)
+INNER JOIN MenuItem
+USING (menuItemID)
+GROUP BY 'Year';
 
 /*Customer_Value_v – List each customer and the total $ amount of their orders for the
 past year, in order of the value of customer orders, from highest to the lowest.*/
