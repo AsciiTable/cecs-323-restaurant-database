@@ -104,7 +104,7 @@ CREATE TABLE lookup_ingredient(
     
     CONSTRAINT ingredient_pk PRIMARY KEY (ingredient)
 );
-CREATE TABLE Recipe( /* _----------------------------- IS INGREDIENTS NEEDED AS A SEPERATE TABLE??????__________-------*/
+CREATE TABLE Recipe(
 	/*recipeName: name of the recipe*/
 	recipeName varchar(20) NOT NULL,
     /*ingredient: name of the ingredients used to make the recipe*/
@@ -225,7 +225,8 @@ CREATE TABLE WorkSchedule(
     shiftType varchar(20) NOT NULL,
     
     CONSTRAINT workschedule_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
-    CONSTRAINT workschedule_fk_2 FOREIGN KEY (workDate, shiftType) REFERENCES Shift (workDate, shiftType)
+    CONSTRAINT workschedule_fk_2 FOREIGN KEY (workDate, shiftType) REFERENCES Shift (workDate, shiftType),
+    CONSTRAINT workschedule_pk PRIMARY KEY (workDate, shiftType, eID)
 );
 /* Creates Part Time Employee Table
 	Holds the employee ID*/
@@ -242,8 +243,8 @@ CREATE TABLE Waiter(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
     
-	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES PartTimeEmployee(eID),
-    CONSTRAINT ptemp_pk PRIMARY KEY (eID)
+	CONSTRAINT waiter_fk_1 FOREIGN KEY (eID) REFERENCES PartTimeEmployee(eID),
+    CONSTRAINT waiter_pk PRIMARY KEY (eID)
 );
 /* Creates Section Table
 	Holds the employee ID and section number*/
