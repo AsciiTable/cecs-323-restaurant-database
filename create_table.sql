@@ -99,6 +99,82 @@ CREATE TABLE Employee(
     CONSTRAINT emp_fk_1 FOREIGN KEY (eID) REFERENCES Person(ID),
     CONSTRAINT emp_pk PRIMARY KEY (eID)
 );
+CREATE TABLE Recipe( /* _----------------------------- IS INGREDIENTS NEEDED AS A SEPERATE TABLE??????__________-------*/
+	/*recipeName: name of the recipe*/
+	recipeName varchar(20) NOT NULL,
+    /*ingredient: name of the ingredients used to make the recipe*/
+    ingredient varchar (20) NOT NULL,
+    
+    CONSTRAINT recipe_pk PRIMARY KEY (recipeName)
+);
+/* Creates Full Time Employee Table
+	Holds the employee ID*/
+CREATE TABLE FullTimeEmployee(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT ftemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
+    CONSTRAINT ftemp_pk PRIMARY KEY (eID)
+);
+/* Creates Manager Table
+	Holds the employee ID*/
+CREATE TABLE Manager(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT manager_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee(eID),
+    CONSTRAINT manager_pk PRIMARY KEY (eID)
+);
+/* Creates Cook Table
+	Holds the employee ID*/
+CREATE TABLE Cook(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    
+	CONSTRAINT cook_fk_1 FOREIGN KEY (eID) REFERENCES FullTimeEmployee(eID),
+    CONSTRAINT cook_pk PRIMARY KEY (eID)
+);
+/* Creates Head Cook Table
+	Holds the employee ID*/
+CREATE TABLE HeadChef(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*recipeName: name of the recipe that the head chef designed*/
+    recipeName varchar(20) NOT NULL,
+    
+	CONSTRAINT hcook_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
+    CONSTRAINT hcook_fk_2 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
+    CONSTRAINT hcook_pk PRIMARY KEY (eID)
+);
+/* Creates Shift Table
+	Holds the work date, shift type, ID of the chef, and ID of the manager*/
+CREATE TABLE Shift(
+	/*date: the day that the employee works*/
+	workDate DATE NOT NULL,
+    /*shiftType: the type of shift that the employee works*/
+    shiftType varchar(20) NOT NULL,
+    /*chefID: employee ID of the chef*/
+    chefID int NOT NULL,
+    /*managerID: employeeID of the manager*/
+    managerID int NOT NULL,
+    
+    CONSTRAINT shift_fk_1 FOREIGN KEY (chefID) REFERENCES HeadChef (eID),
+    CONSTRAINT shift_fk_2 FOREIGN KEY (managerID) REFERENCES Manager (eID),
+    CONSTRAINT shift_pk PRIMARY KEY (workDate, shiftType)
+);
+/* Creates work Scheudle Table
+	Holds employee ID, work date, and shift type*/
+CREATE TABLE WorkSchedule(
+	/*eID: the ID of the employee*/
+	eID int NOT NULL,
+    /*date: the day that the employee works*/
+	workDate DATE NOT NULL,
+    /*shiftType: the type of shift that the employee works*/
+    shiftType varchar(20) NOT NULL,
+    
+    CONSTRAINT workschedule_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
+    CONSTRAINT workschedule_fk_2 FOREIGN KEY (workDate, shiftType) REFERENCES Shift (workDate, shiftType)
+);
 /* Creates Part Time Employee Table
 	Holds the employee ID*/
 CREATE TABLE PartTimeEmployee(
@@ -108,6 +184,7 @@ CREATE TABLE PartTimeEmployee(
 	CONSTRAINT ptemp_fk_1 FOREIGN KEY (eID) REFERENCES Employee(eID),
     CONSTRAINT ptemp_pk PRIMARY KEY (eID)
 );
+/*----------------------------------DO WAITER STUFF HERE --- I DON'T KNOW WHERE DATE AND TYPE ARE SUPPOSED TO COME FROM---------- */
 /* --------------------------- END EMPLOYEE SECTION --------------------------- */
 /* --------------------------- CHEQUE/ORDER SECTION --------------------------- */
 /* Creates Payment Type lookup table
@@ -292,52 +369,3 @@ CREATE TABLE OrderLine(
     CONSTRAINT orderline_fk_2 FOREIGN KEY (menuItemID) REFERENCES MenuItem(menuItemID),
     CONSTRAINT orderline_pk PRIMARY KEY (orderID, menuItemID)
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
