@@ -176,6 +176,27 @@ CREATE TABLE DineInOrder(
 );
 /* --------------------------- END CHEQUE/ORDER SECTION --------------------------- */
 /* --------------------------- MENU ITEM + ORDERLINE SECTION --------------------------- */
+/* Creates To Menu Item table
+	Holds the menu item ID, the menu type that the item resides in, the name, the spice level,
+    the size, and price of the food item*/
+CREATE TABLE MenuItem(
+	/*menuItemID: the ID of the menu item associated with the order line*/
+    menuItemID int NOT NULL,
+    /*menuTupe: the different types of menus that the item can be on*/
+    menuType ENUM ('Evening','Lunch','Sunday Brunch Buffet', 'Children\'s') NOT NULL,
+    /*foodItemName: the name that it is referred to by*/
+    foodItemName varchar(20) NOT NULL, /*RECIPE CLASS NEEDED*/
+    /*spiceLevel: the level of spiciness that the menu item has*/
+    spiceLevel ENUM ('Mild','Tangy','Piquant','Hot','Oh My God') NOT NULL,
+    /*size: the size of the menu item*/
+    size ENUM ('Small', 'Medium', 'Large') NOT NULL, /*SUBJECT TO CHANGE*/
+    /*price: the amount it costs to order this menu item*/
+    price float NOT NULL, /* PRICE IS $0.00 FOR BUFFET ITEMS*/
+    
+    CONSTRAINT menuitem_fk_1 FOREIGN KEY (foodItemName) REFERENCES Recipe (rname),
+    CONSTRAINT menuitem_pk PRIMARY KEY (menuItemID)
+);
+
 /* Creates To Order Line table
 	Holds the order ID and menu item ID*/
 CREATE TABLE OrderLine(
