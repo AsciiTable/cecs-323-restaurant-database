@@ -33,19 +33,20 @@ USING (custID);
 name of the mentor, then the name of the mentee. Show the skill that the mentorship
 passes, as well as the start date.*/
 /*CREATE VIEW Sous_mentor_v AS*/
-SELECT p1.fName AS 'Mentor First Name', p1. lName AS 'Mentor Last Name', p2.fName AS 'Mentee First Name', p2.lName AS 'Mentee Last Name', recipeName AS 'Skill', startDate AS 'Start Date'
+SELECT p1.fName AS 'Mentor First Name', p1.lName AS 'Mentor Last Name', p2.fName AS 'Mentee First Name', p2.lName AS 'Mentee Last Name', Mentorship.recipeName AS 'Skill', startDate AS 'Start Date'
 FROM Mentorship
-INNER JOIN Expertise
-ON Expertise.eID = Mentorship.menteeID
-INNER JOIN SousChef 
-USING (eID)
-INNER JOIN Cook 
-USING (eID)
-INNER JOIN FullTimeEmployee
-USING (eID)
+INNER JOIN Person p1
+ON p1.ID = Mentorship.mentorID
+INNER JOIN Person p2
+ON Mentorship.menteeID = p2.ID
+ORDER BY 'Mentor First Name', 'Mentor Last Name','Mentee Last Name','Mentee First Name';
 
 /*Customer_Sales_v – On a year by year basis, show how much each customer has spent at
 Miming’s.*/
+SELECT YEAR(chequeDate) AS 'YEAR', ID, fName, lName
+FROM Cheque
+INNER JOIN Person
+On Cheque.custID = Person.ID;
 
 /*Customer_Value_v – List each customer and the total $ amount of their orders for the
 past year, in order of the value of customer orders, from highest to the lowest.*/
