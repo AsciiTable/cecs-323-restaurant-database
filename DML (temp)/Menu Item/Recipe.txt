@@ -1,0 +1,18 @@
+insert into Recipe (recipeName) Values 
+#meat entree
+("Chow Mein"),
+("Egg Foo Young"),
+("Chop Suey"),
+#Soups
+("Chicken Noddle Soup"),
+("Tofo Soup"),
+("Wonton Soup"),
+("Egg drop Soup"),
+("Cream of Mushroom Soup"),
+#appetizers
+("Shrimp Balls"),
+("Dumplings"),
+("Egg Rolls"),
+("Crab Rangoon"),
+("Lettuce Wraps"),
+("Pork Buns");
