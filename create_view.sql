@@ -10,7 +10,7 @@ FROM MenuItem;
 /*Customer_addresses_v – for each customer, indicate whether they are an individual or a
 corporate account, and display all of the information that we are managing for that
 customer.*/
-/*CREATE VIEW Customer_address_v AS*/
+/*CREATE VIEW Customer_address_v*/
 SELECT 'Individual' AS 'Account', custID AS 'Customer ID', fName AS 'First Name', lName AS 'Last Name', snailMailAddress AS 'Snail Mail', emailAddress AS 'E-Mail', 'N/A' AS 'Department', 'N/A' AS 'Corporation ID'
 FROM PrivateCustomer
 INNER JOIN PublicCustomer
@@ -32,17 +32,6 @@ USING (custID);
 /*Sous_mentor_v – reports all the mentor/mentee relationships at Miming’s, sorted by the
 name of the mentor, then the name of the mentee. Show the skill that the mentorship
 passes, as well as the start date.*/
-/*CREATE VIEW Sous_mentor_v AS*/
-SELECT p1.fName AS 'Mentor First Name', p1. lName AS 'Mentor Last Name', p2.fName AS 'Mentee First Name', p2.lName AS 'Mentee Last Name', recipeName AS 'Skill', startDate AS 'Start Date'
-FROM Mentorship
-INNER JOIN Expertise
-ON Expertise.eID = Mentorship.menteeID
-INNER JOIN SousChef 
-USING (eID)
-INNER JOIN Cook 
-USING (eID)
-INNER JOIN FullTimeEmployee
-USING (eID)
 
 /*Customer_Sales_v – On a year by year basis, show how much each customer has spent at
 Miming’s.*/
