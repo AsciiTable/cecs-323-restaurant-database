@@ -2,4 +2,4 @@ insert into lookup_menu (menu) Values
 ("Evening"),
 ("Lunch"),
 ("Sun Brunch Buffet"),
-("Children's")
+("Children's");

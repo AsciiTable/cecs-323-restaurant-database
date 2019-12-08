@@ -3,5 +3,5 @@ insert into lookup_meat (meat) Values
 ("Pork"),
 ("Chicken"),
 ("Beef"),
-("Seafood")
+("Seafood"),
 ("Vegatables");
