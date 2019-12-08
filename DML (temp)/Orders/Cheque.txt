@@ -1,0 +1,39 @@
+insert into Cheque (chequeID, custID, payment, chequeDate, mimingMoneyUsed) Values 
+#Initial cheques for the 25 customers that we have 
+#1 - 5 Web orders
+#6 - 15 To go Orders
+#6 - 10 Phone Orders
+#11 - 15 In Person Order
+#16 - 25 Dine In Orders
+
+#1 - 10 Private Customers
+#11 - 19 Corp Representatives
+#20 - 25 Anonymous Customers
+
+#Do all in cash so it's easier 
+(1, 1, "Cash", "2018-05-03",0),
+(2, 2, "Cash", "2019-10-31",0),
+(3, 3, "Cash", "2018-07-21",0),
+(4, 4, "Cash", "2018-12-06",0),
+(5, 5, "Cash", "2019-03-08",0),
+(6, 6, "Credit Card", "2019-04-04",0),
+(7, 7, "Credit Card", "2019-05-11",0),
+(8, 8, "Credit Card", "2018-03-21",0),
+(9, 9, "Credit Card", "2018-10-25",0),
+(10, 10, "Credit Card", "2019-04-03",0),
+(11, 11, "Credit Card", "2019-06-03",0),
+(12, 12, "Credit Card", "2018-03-14",0),
+(13, 13, "Credit Card", "2018-08-07",0),
+(14, 14, "Credit Card", "2018-10-14",0),
+(15, 15, "Credit Card", "2019-01-15",0),
+(16, 16, "Cash", "2019-05-30",0),
+(17, 17, "Cash", "2018-11-04",0),
+(18, 18, "Cash", "2019-02-11",0),
+(19, 19, "Cash", "2019-02-20",0),
+(20, 20, "Cash", "2019-03-21",0),
+(21, 21, "Cash", "2019-07-16",0),
+(22, 22, "Cash", "2018-03-24",0),
+(23, 23, "Cash", "2018-04-20",0),
+(24, 24, "Cash", "2018-11-21",0),
+(25, 25, "Cash", "2019-09-20",0);
+

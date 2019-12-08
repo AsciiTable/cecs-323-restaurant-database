@@ -8,3 +8,5 @@
 3. When the menu type of the mneu item is a buffet, size is n/a 
 
 4. When there isn't enough miming's money to be used and they don't have any.
+
+5. Anonymous Customers don't have miming's money 

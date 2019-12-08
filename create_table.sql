@@ -102,7 +102,7 @@ CREATE TABLE lookup_ingredient(
 );
 CREATE TABLE Recipe(
 	/*recipeName: name of the recipe*/
-	recipeName varchar(20) NOT NULL,
+	recipeName varchar(100) NOT NULL,
     /*ingredient: name of the ingredients used to make the recipe*/
     ingredient varchar (20) NOT NULL,
     
