@@ -154,7 +154,7 @@ CREATE TABLE HeadChef(
 	/*eID: the ID of the employee*/
 	eID int NOT NULL,
     /*recipeName: name of the recipe that the head chef designed*/
-    recipeName varchar(20) NOT NULL,
+    recipeName varchar(100) NOT NULL,
     
 	CONSTRAINT hcook_fk_1 FOREIGN KEY (eID) REFERENCES Cook (eID),
     CONSTRAINT hcook_fk_2 FOREIGN KEY (recipeName) REFERENCES Recipe (recipeName),
@@ -417,7 +417,7 @@ CREATE TABLE MenuItem(
     /*menuTupe: the different types of menus that the item can be on*/
     menuType varchar(20) NOT NULL,
     /*foodItemName: the name that it is referred to by*/
-    foodItemName varchar(20) NOT NULL,
+    foodItemName varchar(100) NOT NULL,
     /*spiceLevel: the level of spiciness that the menu item has*/
     spiceLevel varchar(20) NOT NULL,
     /*size: the size of the menu item*/
@@ -474,7 +474,7 @@ CREATE TABLE Soup(
 	/*soupID: the ID of the soup associated with the orderline*/
 	soupID int NOT NULL,
     /*soupVolume: he measurement that the soup is served in*/
-    soupVolume varchar(20) NOT NULL,
+    soupVolume varchar(100) NOT NULL,
     
     CONSTRAINT soup_fk_1 FOREIGN KEY (soupID) REFERENCES MenuItem (menuItemID),
     CONSTRAINT soup_fk_2 FOREIGN KEY (soupVolume) REFERENCES lookup_volume (volume),
