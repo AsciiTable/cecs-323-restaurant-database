@@ -246,3 +246,8 @@ values
 ('MaitreD'),
 ('Dish Washer');
 
+insert into RecipeIngredient(RecipeName, ingredient)
+values
+('Dumplings','Dough'),
+('Egg Foo Young','Eggs'),
+('Pork buns','Raw Pork');
