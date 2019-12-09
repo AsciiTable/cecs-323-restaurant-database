@@ -1,4 +1,11 @@
 insert into lookup_size (size) Values 
-("small"),
-("medium"),
-("large");
+("L-Small"),
+("L-Medium"),
+("L-Large"),
+("E-Small"),
+("E-Medium"),
+("E-Large"),
+("K-Medium"),
+("K-Large"),
+("Volume");
+
