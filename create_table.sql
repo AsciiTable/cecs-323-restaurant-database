@@ -363,10 +363,30 @@ CREATE TABLE ToGoOrder(
     /*orderTime: the time at which the order has been made*/
     orderTime TIME NOT NULL, /*HH:MM:SS format*/
     /*orderTimeReady: the time at which the order is ready for pickup*/
-    orderTimeReady TIME NOT NULL,
+    orderTimeReady TIME AS (addTime(ordertime, "03:00")),
     
     CONSTRAINT toorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
     CONSTRAINT toorder_pk PRIMARY KEY (orderID)
+);
+/* Creates Phone Order table
+	Holds the order ID and phone number*/
+CREATE TABLE PhoneOrder(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    /*phoneNumber: the phone number the placed the order*/
+    phoneNumber varchar(10),
+    
+    CONSTRAINT phorder_fk_1 FOREIGN KEY (orderID) REFERENCES ToGoOrder (orderID),
+    CONSTRAINT phorder_pk PRIMARY KEY (orderID)
+);
+/* Creates In Person Order Table
+	Holds the order ID*/
+CREATE TABLE InPersonOrder(
+	/*orderID: the ID of the order*/
+	orderID int NOT NULL,
+    
+    CONSTRAINT iporder_fk_1 FOREIGN KEY (orderID) REFERENCES ToGoOrder (orderID),
+    CONSTRAINT iporder_pk PRIMARY KEY (orderID)
 );
 /* Creates Dine In Order Table
 	Holds the order ID, the seat number, and the tabel number the order belongs to*/
@@ -489,6 +509,8 @@ CREATE TABLE OrderLine(
 	orderID int NOT NULL,
     /*menuItemID: the ID of the menu item associated with the order line*/
     menuItemID int NOT NULL,
+    /*quantity: the amount of menu items ordered*/
+    quantity int NOT NULL,
     
     CONSTRAINT orderline_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
     CONSTRAINT orderline_fk_2 FOREIGN KEY (menuItemID) REFERENCES MenuItem(menuItemID),
