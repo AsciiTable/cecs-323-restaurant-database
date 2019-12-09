@@ -122,7 +122,7 @@ ORDER BY count(eID) ASC
 Limit 3;
 
 /*p1. Return the name of the sous chefs that are an expert in a recipe and is teaching it to another sous chef*/
-select Person.fname, Person.lname from Mentorship
+select DISTINCT Person.fname, Person.lname from Mentorship
 inner join Person
 on Person.ID = Mentorship.mentorID;
 /*p2.Return the name of the head chef that worked at the end of the first week of December during 2019*/
