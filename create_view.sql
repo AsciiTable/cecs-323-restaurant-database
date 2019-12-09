@@ -10,6 +10,8 @@ FROM MenuItem;
 /*Customer_addresses_v – for each customer, indicate whether they are an individual or a
 corporate account, and display all of the information that we are managing for that
 customer.*/
+SELECT * FROM Customer_address_v;
+
 CREATE VIEW Customer_address_v AS
 SELECT 'Individual' AS 'Account', custID AS 'Customer ID', fName AS 'First Name', lName AS 'Last Name', snailMailAddress AS 'Snail Mail', emailAddress AS 'E-Mail', 'N/A' AS 'Department', 'N/A' AS 'Corporation ID'
 FROM PrivateCustomer
