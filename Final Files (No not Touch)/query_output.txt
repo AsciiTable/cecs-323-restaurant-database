@@ -1,0 +1,1182 @@
+/*a. List the customers. For each customer, indicate which category he or she fall into, and
+his or her contact information. If you have more than one independent categorization of
+customers, please indicate which category the customer falls into for all of the
+categorizations.*/
+SELECT custID AS 'Customer ID', fName AS 'First Name', lName AS 'Last Name', 'Public Customer, Individual' AS 'Category', snailMailAddress AS 'Snail Mail', emailAddress AS 'E-Mail'
+FROM PrivateCustomer
+INNER JOIN PublicCustomer
+USING (custID)
+INNER JOIN Person
+ON PublicCustomer.custID = Person.ID
+UNION
+SELECT custID AS 'Customer ID', fName AS 'First Name', lName AS 'Last Name', 'Public Customer, Corporate' AS 'Category', snailMailAddress AS 'Snail Mail', emailAddress AS 'E-Mail'
+FROM Corporation
+INNER JOIN CorporateRepresentative
+USING (corpID)
+INNER JOIN Person
+ON CorporateRepresentative.custID = Person.ID
+UNION
+SELECT custID AS 'Customer ID', 'N/A' AS 'First Name', 'N/A' AS 'Last Name', 'Anonymous' AS 'Category','N/A' AS 'Snail Mail', 'N/A' AS 'E-Mail'
+FROM AnonymousCustomer
+INNER JOIN Customer
+USING (custID);
+
+# Customer ID, First Name, Last Name, Category, Snail Mail, E-Mail
+'1', 'Jason', 'Tran', 'Public Customer, Individual', '8796 Arnold Street Cincinnati, OH 45211', 'rnewman@optonline.net'
+'2', 'Matthew', 'Pham', 'Public Customer, Individual', '10 Stillwater Lane\nAtlanta, GA 30303', 'aglassis@optonline.net'
+'3', 'Sonia', 'Mcleod', 'Public Customer, Individual', '9039 Arlington Road\nCoatesville, PA 19320', 'bulletin@outlook.com'
+'4', 'Siena', 'Prentice', 'Public Customer, Individual', '833 Cherry Hill St.\nWoonsocket, RI 02895', 'sarahs@yahoo.ca'
+'5', 'Zeynep', 'Lynch', 'Public Customer, Individual', '12 Warren Dr.\nCarmel, NY 10512', 'trieuvan@verizon.net'
+'6', 'Amara', 'Own', 'Public Customer, Individual', '36 West St Margarets Lane\nEaston, PA 18042', 'gslondon@me.com'
+'7', 'Chanice', 'Whiteley', 'Public Customer, Individual', '600 Vine Ave.\nLincoln, NE 68506', 'haddawy@icloud.com'
+'8', 'Linda', 'Beck', 'Public Customer, Individual', '104 Green Lake Dr.\nUpland, CA 91784', 'netsfr@yahoo.com'
+'9', 'Brielle', 'O\'Ryan', 'Public Customer, Individual', '8204 Glen Creek Ave.\nNicholasville, KY 40356', 'willg@msn.com'
+'10', 'Makayla', 'Tyler', 'Public Customer, Individual', '27 N. Oakwood St.\nKalamazoo, MI 49009', 'weazelman@att.net'
+'11', 'Ocean', 'Mckenna', 'Public Customer, Corporate', 'Google Ave', 'gmail@gmail.com'
+'12', 'Wilson', 'Mcphee', 'Public Customer, Corporate', '32 Walt Whitman St.\nAltamonte Springs, FL 32714', 'oddsandends@gmail.com'
+'13', 'Lillie', 'Nolan', 'Public Customer, Corporate', '763 El Dorado Dr.\nWinter Springs, FL 32708', 'handyhelp@gmail.com'
+'14', 'Mariya', 'Poole', 'Public Customer, Corporate', '16 N. Atlantic St.\nMooresville, NC 28115', 'nicksknack@gmail.com'
+'15', 'Tia', 'Emonds', 'Public Customer, Corporate', '814 East Maiden Court\nManchester Township, NJ 08759', 'hereandthere@gmail.com'
+'16', 'Jessie', 'Koch', 'Public Customer, Corporate', '1 Adams Street\nThomasville, NC 27360', 'ecetera@gmail.com'
+'17', 'Tillie', 'Hardin', 'Public Customer, Corporate', '29 Clay St.\nWisconsin Rapids, WI 54494', 'closetofchoices@gmail.com'
+'18', 'Sila', 'Strong', 'Public Customer, Corporate', '1 Hall Road\nWest Bend, WI 53095', 'assortedassets@gmail.com'
+'19', 'Katerina', 'Conroy', 'Public Customer, Corporate', '192 Mill Ave.\nFreehold, NJ 07728', 'trustassortment@gmail.com'
+'20', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+'21', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+'22', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+'23', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+'24', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+'25', 'N/A', 'N/A', 'Anonymous', 'N/A', 'N/A'
+
+#b
+select custID, fName, lName, total from (
+select custID,total from (
+select chequeID, sum(total) as total from (
+select chequeID, OrderLine.menuItemID, price * quantity as Total from (
+select Orders.orderID, Cheque.chequeID from Cheque
+inner join Orders
+on Orders.chequeID = Cheque.chequeID
+where chequeDate between (now() - interval 2 year) and now()) S
+inner join	OrderLine
+on	OrderLine.orderID = S.orderID
+inner join	MenuItem
+on	OrderLine.menuItemID = MenuItem.menuItemID
+group by chequeID, OrderLine.menuItemID) D
+group by chequeID
+order by sum(total) desc
+limit 3) F
+inner join Cheque
+on 	F.chequeID = Cheque.chequeID) G
+inner join Person
+on 	Person.ID = G.custiD;
+
+# custID, fName, lName, total
+'8', 'Linda', 'Beck', '265'
+'7', 'Chanice', 'Whiteley', '100'
+'6', 'Amara', 'Own', '70'
+
+/*c. Find all of the sous chefs who have three or more menu items that they can prepare. For
+each sous chef, list their name, the number of menu items that they can prepare, and
+each of the menu items. You can use group_concat to get all of a given sous chef’s data
+on one row, or print out one row per sous chef per menu item.*/
+SELECT fName AS 'First Name', lName AS 'Last Name', COUNT(recipeName) AS '# of Recipes', GROUP_CONCAT(recipeName) AS 'Recipes'
+FROM Expertise
+INNER JOIN SousChef
+USING (eID)
+INNER JOIN Person 
+ON SousChef.eID = Person.ID
+GROUP BY eID;
+
+# First Name, Last Name, # of Recipes, Recipes
+'Walter', 'Peters', '7', 'Egg drop soup,Cream of Mushroom Soup,Crab Rangoon,Chow Mein,Wonton Soup,Tofo Soup,Pork buns'
+'Arwin', 'Hernandez', '5', 'Wonton Soup,Tofo Soup,Egg Foo Young,Dumplings,Crab Rangoon'
+'Jaxx', 'Harrison', '1', 'Egg Rolls'
+
+
+/*d. Find all of the sous chefs who have three or more menu items in common.*/
+SELECT p1.fName AS 'Chef 1 First Name', p1.lName AS 'Chef 1 Last Name', p2.fName AS 'Chef 2 First Name', p2.lName AS 'Chef 2 Last Name'
+FROM (SELECT e1.eID 'Chef1', e2.eID 'Chef2', COUNT(*) AS 'Pairs'
+	FROM Expertise e1, Expertise e2
+	WHERE e1.eID < e2.eID AND e1.recipeName = e2.recipeName
+	GROUP BY e1.eID, e2.eID) t1
+INNER JOIN Person p1
+ON t1.Chef1 = p1.ID
+INNER JOIN Person p2
+ON t1.Chef2 = p2.ID
+WHERE t1.Pairs >= 3;
+
+# Chef 1 First Name, Chef 1 Last Name, Chef 2 First Name, Chef 2 Last Name
+'Walter', 'Peters', 'Arwin', 'Hernandez'
+
+#Part E
+select foodItemName, spiceLevel, totalOrdered from (
+select OrderLine.menuItemID, sum(OrderLine.quantity) as totalOrdered from OrderLine
+inner join	MenuItem
+on	OrderLine.menuItemID = MenuItem.menuItemID
+where	menuType = "Children's"
+group by	OrderLine.menuItemID
+order by sum(OrderLine.quantity) desc
+limit 3) D
+inner join	MenuItem
+on MenuItem.menuItemID = D.menuItemID;
+
+# foodItemName, spiceLevel, totalOrdered
+'Egg Foo Young', 'Piquant', '5'
+'Egg Foo Young', 'Mild', '2'
+'Egg Foo Young', 'Tangy', '2'
+
+
+/*f. List all the menu items, the shift in which the menu item was ordered, and the sous chef
+on duty at the time, when the sous chef was not an expert in that menu item.*/
+SELECT foodItemName AS 'Food Item', menuType AS 'Menu', spiceLevel AS 'Spice Level', size AS 'Size', workDate AS 'Day Ordered', shiftType AS 'Time Ordered', fName AS 'Sous Chef First Name', lName AS 'Sous Chef Last Name'
+FROM MenuItem
+INNER JOIN OrderLine
+USING (menuItemID)
+INNER JOIN Orders
+USING (orderID)
+INNER JOIN Cheque
+USING (chequeID)
+INNER JOIN Shift
+ON Cheque.chequeDate = Shift.workDate
+INNER JOIN WorkSchedule
+USING (workDate, shiftType)
+INNER JOIN Person
+ON WorkSchedule.eID = Person.ID
+WHERE foodItemName NOT IN
+(SELECT recipename
+FROM Expertise
+INNER JOIN SousChef
+USING (eID));
+
+# Food Item, Menu, Spice Level, Size, Day Ordered, Time Ordered, Sous Chef First Name, Sous Chef Last Name
+'Chop Suey', 'Evening', 'Piquant', 'E-Small', '2019-12-03', 'pm', 'Yazmin', 'Coles'
+'Shrimp Balls', 'Lunch', 'Oh My God', 'L-Large', '2019-12-02', 'am', 'Hattie', 'Preston'
+'Chop Suey', 'Evening', 'Hot', 'E-Large', '2019-12-02', 'am', 'Hattie', 'Preston'
+'Shrimp Balls', 'Lunch', 'Hot', 'L-Medium', '2019-12-02', 'am', 'Hattie', 'Preston'
+'Shrimp Balls', 'Lunch', 'Mild', 'L-Medium', '2019-12-01', 'am', 'Gordon', 'Hodges'
+'Shrimp Balls', 'Lunch', 'Oh My God', 'L-Medium', '2019-12-02', 'am', 'Hattie', 'Preston'
+'Chop Suey', 'Evening', 'Oh My God', 'E-Small', '2019-12-02', 'am', 'Hattie', 'Preston'
+'Chop Suey', 'Evening', 'Hot', 'E-Small', '2019-12-02', 'am', 'Hattie', 'Preston'
+
+
+/*g. List the customers, sorted by the amount of Miming’s Money that they have, from largest
+to smallest.*/
+SELECT fName AS 'Customer First Name', lName AS 'Customer Last Name', (totalSpent/10) - mimingMoneyUsed AS 'Total Miming\'s Money'
+FROM (SELECT fName, lName, SUM(chequeTotal) AS totalSpent, mimingMoneyUsed
+	FROM(SELECT chequeID, custID, SUM(t1.orderTotal) AS chequeTotal, mimingMoneyUsed
+		FROM(SELECT orderID, chequeID,  SUM(quantity*price) AS orderTotal
+			FROM MenuItem
+			INNER JOIN OrderLine
+			USING (menuItemID)
+			INNER JOIN Orders
+			USING (orderID)
+			GROUP BY orderID) t1
+		INNER JOIN Cheque
+		USING (chequeID)
+		GROUP BY chequeID) t2
+	INNER JOIN Person
+	ON t2.custID = Person.ID
+	GROUP BY fName, lName) t3
+ORDER BY (totalSpent/10) - mimingMoneyUsed DESC;
+
+# Customer First Name, Customer Last Name, Total Miming's Money
+'Linda', 'Beck', '26.5'
+'Chanice', 'Whiteley', '10'
+'Amara', 'Own', '7'
+'Wilson', 'Mcphee', '6'
+'Ruairi', 'Bates', '6'
+'Ocean', 'Mckenna', '5.4'
+'Sonia', 'Mcleod', '5'
+'Arslan', 'Pcikett', '4.8'
+'Matthew', 'Pham', '4'
+'Tia', 'Emonds', '4'
+'Zoha', 'Sheppard', '3'
+'Jessie', 'Koch', '3'
+'Rocco', 'Braun', '3'
+'Zeynep', 'Lynch', '3'
+'Cindy', 'Sheehan', '2'
+'Mariya', 'Poole', '2'
+'Jason', 'Tran', '2'
+'Lillie', 'Nolan', '2'
+'Sila', 'Strong', '1.5'
+'Katerina', 'Conroy', '1.5'
+'Tillie', 'Hardin', '1.5'
+'Siena', 'Prentice', '1.2'
+'Brook', 'Morgan', '1'
+'Makayla', 'Tyler', '0.6'
+'Brielle', 'O\'Ryan', '0.5'
+
+#Part h. List the customers and the total that they have spent at Miming’s ever, in descending
+#order by the amount that they have spent.
+
+select custID, sum(priceEach) from(
+select Customer.custID, Cheque.chequeID, MenuItem.menuItemID, price * quantity as priceEach from Customer
+inner join	Cheque 
+on Customer.custID = Cheque.custID
+inner join Orders
+on Orders.chequeID = Cheque.chequeID
+inner join OrderLine
+on OrderLine.orderID = Orders.orderID
+inner join MenuItem
+on MenuItem.menuItemID = OrderLine.menuItemID
+group by Customer.custID, Cheque.chequeID, menuItemID) D
+group by custID
+order by sum(priceEach) desc;
+
+# custID, sum(priceEach)
+'8', '265'
+'7', '100'
+'6', '70'
+'12', '60'
+'22', '60'
+'11', '54'
+'3', '50'
+'21', '48'
+'15', '40'
+'2', '40'
+'16', '30'
+'20', '30'
+'5', '30'
+'25', '30'
+'13', '20'
+'14', '20'
+'1', '20'
+'24', '20'
+'17', '15'
+'18', '15'
+'19', '15'
+'4', '12'
+'23', '10'
+'10', '6'
+'9', '5'
+
+#i. Report on the customers at Miming’s by the number of timesthat they come in by month
+#and order the report from most frequent to the least frequent.
+
+
+select custID, fname, lname, count(custID) / 12 as TimeVistedPerMonth from Cheque
+inner join Person 
+on Person.ID = custID
+group by custID, fname, lname
+order by custID asc;
+
+# custID, fname, lname, TimeVistedPerMonth
+'1', 'Jason', 'Tran', '0.0833'
+'2', 'Matthew', 'Pham', '0.0833'
+'3', 'Sonia', 'Mcleod', '0.0833'
+'4', 'Siena', 'Prentice', '0.0833'
+'5', 'Zeynep', 'Lynch', '0.0833'
+'6', 'Amara', 'Own', '0.0833'
+'7', 'Chanice', 'Whiteley', '0.0833'
+'8', 'Linda', 'Beck', '0.0833'
+'9', 'Brielle', 'O\'Ryan', '0.0833'
+'10', 'Makayla', 'Tyler', '0.0833'
+'11', 'Ocean', 'Mckenna', '0.0833'
+'12', 'Wilson', 'Mcphee', '0.0833'
+'13', 'Lillie', 'Nolan', '0.0833'
+'14', 'Mariya', 'Poole', '0.0833'
+'15', 'Tia', 'Emonds', '0.0833'
+'16', 'Jessie', 'Koch', '0.0833'
+'17', 'Tillie', 'Hardin', '0.0833'
+'18', 'Sila', 'Strong', '0.0833'
+'19', 'Katerina', 'Conroy', '0.0833'
+'20', 'Zoha', 'Sheppard', '0.0833'
+'21', 'Arslan', 'Pcikett', '0.0833'
+'22', 'Ruairi', 'Bates', '0.0833'
+'23', 'Brook', 'Morgan', '0.0833'
+'24', 'Cindy', 'Sheehan', '0.0833'
+'25', 'Rocco', 'Braun', '0.0833'
+
+#Part J
+List the three customers who have spent the most at Miming’s over the past year. 
+#Order by the amount that they spent, from largest to smallest.
+select custID, fName, lName, total from (
+select custID,total from (
+select chequeID, sum(total) as total from (
+select chequeID, OrderLine.menuItemID, price * quantity as Total from (
+select Orders.orderID, Cheque.chequeID from Cheque
+inner join Orders
+on Orders.chequeID = Cheque.chequeID
+where chequeDate between (now() - interval 1 year) and now()) S
+inner join	OrderLine
+on	OrderLine.orderID = S.orderID
+inner join	MenuItem
+on	OrderLine.menuItemID = MenuItem.menuItemID
+group by chequeID, OrderLine.menuItemID) D
+group by chequeID
+order by sum(total) desc
+limit 3) F
+inner join Cheque
+on 	F.chequeID = Cheque.chequeID) G
+inner join Person
+on 	Person.ID = G.custiD;
+
+# custID, fName, lName, total
+'8', 'Linda', 'Beck', '265'
+'7', 'Chanice', 'Whiteley', '100'
+'6', 'Amara', 'Own', '70'
+
+#Part K
+select OrderLine.menuItemID, quantity * price as MONEYEARNED from OrderLine
+inner join	MenuItem
+on	OrderLine.menuItemID = MenuItem.menuItemID
+group by	OrderLine.menuItemID
+order by MONEYEARNED desc
+LIMIT 5;
+
+# menuItemID, MONEYEARNED
+'525', '60'
+'51', '50'
+'653', '48'
+'284', '45'
+'325', '45'
+
+/*Matt's Queries*/
+/*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
+the sous chef is passing along to the other sous chefs.*/
+
+SELECT mentorID, recipeName
+FROM Mentorship
+WHERE enddate IS NULL;
+
+# mentorID, recipeName
+'40', 'Egg Foo Young'
+'41', 'Egg Rolls'
+'39', 'Pork Buns'
+
+/*M. Find the three menu items that have the fewest sous chefs skilled in those menu items*/
+SELECT recipeName,count(eID) As employeeCount
+from Expertise
+group by recipeName
+ORDER BY count(eID) ASC
+Limit 3;
+
+# recipeName, employeeCount
+'Cream of Mushroom Soup', '1'
+'Chow Mein', '1'
+'Pork buns', '1'
+
+
+#n. List all of the customers who eat at Miming’s on their own as well as ordering for their
+#corporation.
+
+
+select fname, lname, "Private Customer" as Category from Customer
+inner join	PrivateCustomer
+on	Customer.custID = PrivateCustomer.custID
+inner join Person
+on Customer.custID = Person.ID
+union
+select fname, lname, "Corporate Representative" as Category from Customer
+inner join	CorporateRepresentative
+on	Customer.custID = CorporateRepresentative.custID
+inner join Person
+on Customer.custID = Person.ID
+
+# fname, lname, Category
+'Jason', 'Tran', 'Private Customer'
+'Matthew', 'Pham', 'Private Customer'
+'Sonia', 'Mcleod', 'Private Customer'
+'Siena', 'Prentice', 'Private Customer'
+'Zeynep', 'Lynch', 'Private Customer'
+'Amara', 'Own', 'Private Customer'
+'Chanice', 'Whiteley', 'Private Customer'
+'Linda', 'Beck', 'Private Customer'
+'Brielle', 'O\'Ryan', 'Private Customer'
+'Makayla', 'Tyler', 'Private Customer'
+'Ocean', 'Mckenna', 'Corporate Representative'
+'Wilson', 'Mcphee', 'Corporate Representative'
+'Lillie', 'Nolan', 'Corporate Representative'
+'Mariya', 'Poole', 'Corporate Representative'
+'Tia', 'Emonds', 'Corporate Representative'
+'Jessie', 'Koch', 'Corporate Representative'
+'Tillie', 'Hardin', 'Corporate Representative'
+'Sila', 'Strong', 'Corporate Representative'
+'Katerina', 'Conroy', 'Corporate Representative'
+
+#Part O
+select menuItemID, menuType, foodItemName, spiceLevel, size, price, "n/a" as addOnOrVolume, "Appetizer" as Category from MenuItem
+inner join	Appetizer
+on	MenuItem.menuItemID = appetizerID
+union 
+select menuItemID, menuType, foodItemName, spiceLevel, size, price, meatEntreeAddOn as addOnOrVolume, "Meat Entree" as Category  from MenuItem
+inner join	MeatEntree
+on MenuItem.menuItemID = meatEntreeID
+union 
+select menuItemID, menuType, foodItemName, spiceLevel, size, price, soupVolume as addOnOrVolume, "Soup" as Category from MenuItem
+inner join	Soup
+on Soup.soupID = menuItemID
+order by menuType;
+
+# menuItemID, menuType, foodItemName, spiceLevel, size, price, addOnOrVolume, Category
+'73', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'133', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'16', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'96', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'19', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'99', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'2', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'70', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'82', 'Children\'s', 'Chop Suey', 'Mild', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'40', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'132', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'120', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'15', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'95', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'18', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'98', 'Children\'s', 'Chop Suey', 'Mild', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'1', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'69', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'81', 'Children\'s', 'Chop Suey', 'Hot', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'39', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'131', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'119', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'14', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'94', 'Children\'s', 'Chop Suey', 'Mild', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'17', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'97', 'Children\'s', 'Chop Suey', 'Hot', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'68', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'48', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Beef', 'Meat Entree'
+'130', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'118', 'Children\'s', 'Chop Suey', 'Mild', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'13', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'93', 'Children\'s', 'Chop Suey', 'Hot', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'64', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Pork', 'Meat Entree'
+'67', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'47', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Beef', 'Meat Entree'
+'38', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'117', 'Children\'s', 'Chop Suey', 'Hot', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'12', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'92', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'63', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Pork', 'Meat Entree'
+'66', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'46', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Beef', 'Meat Entree'
+'37', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'129', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'116', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'144', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'11', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'91', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'62', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Pork', 'Meat Entree'
+'65', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'45', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Beef', 'Meat Entree'
+'36', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'128', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'115', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'143', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'10', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'90', 'Children\'s', 'Chop Suey', 'Mild', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'61', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Pork', 'Meat Entree'
+'32', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'44', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'112', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'35', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'127', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'114', 'Children\'s', 'Chop Suey', 'Mild', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'142', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'9', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'89', 'Children\'s', 'Chop Suey', 'Hot', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'60', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'31', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'43', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'111', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'34', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'126', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'113', 'Children\'s', 'Chop Suey', 'Hot', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'141', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'56', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'59', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'30', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'42', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'110', 'Children\'s', 'Chop Suey', 'Mild', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'33', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'125', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'80', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'140', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'55', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'58', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'29', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'41', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'109', 'Children\'s', 'Chop Suey', 'Hot', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'124', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'79', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'139', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'54', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'57', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'28', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'8', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Beef', 'Meat Entree'
+'108', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'88', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Large', '15', 'Beef', 'Meat Entree'
+'123', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'78', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'138', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'53', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Chicken', 'Meat Entree'
+'24', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Large', '15', 'Pork', 'Meat Entree'
+'104', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Large', '15', 'Pork', 'Meat Entree'
+'27', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'7', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Beef', 'Meat Entree'
+'107', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'87', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Large', '15', 'Beef', 'Meat Entree'
+'122', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'77', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Large', '15', 'Vegatables', 'Meat Entree'
+'137', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'52', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'23', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Large', '15', 'Pork', 'Meat Entree'
+'103', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Large', '15', 'Pork', 'Meat Entree'
+'26', 'Children\'s', 'Chow Mein', 'Mild', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'6', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Beef', 'Meat Entree'
+'106', 'Children\'s', 'Chop Suey', 'Mild', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'86', 'Children\'s', 'Chop Suey', 'Mild', 'K-Large', '15', 'Beef', 'Meat Entree'
+'121', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Chef Special', 'Meat Entree'
+'76', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'136', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'51', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'22', 'Children\'s', 'Chow Mein', 'Mild', 'K-Large', '15', 'Pork', 'Meat Entree'
+'102', 'Children\'s', 'Chop Suey', 'Mild', 'K-Large', '15', 'Pork', 'Meat Entree'
+'25', 'Children\'s', 'Chow Mein', 'Hot', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'5', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Beef', 'Meat Entree'
+'105', 'Children\'s', 'Chop Suey', 'Hot', 'K-Medium', '10', 'Seafood', 'Meat Entree'
+'85', 'Children\'s', 'Chop Suey', 'Hot', 'K-Large', '15', 'Beef', 'Meat Entree'
+'75', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'135', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'50', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'21', 'Children\'s', 'Chow Mein', 'Hot', 'K-Large', '15', 'Pork', 'Meat Entree'
+'101', 'Children\'s', 'Chop Suey', 'Hot', 'K-Large', '15', 'Pork', 'Meat Entree'
+'4', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'72', 'Children\'s', 'Egg Foo Young', 'Tangy', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'84', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'74', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Medium', '10', 'Vegatables', 'Meat Entree'
+'134', 'Children\'s', 'Egg Foo Young', 'Mild', 'K-Large', '15', 'Chef Special', 'Meat Entree'
+'49', 'Children\'s', 'Egg Foo Young', 'Hot', 'K-Medium', '10', 'Chicken', 'Meat Entree'
+'20', 'Children\'s', 'Chow Mein', 'Tangy', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'100', 'Children\'s', 'Chop Suey', 'Tangy', 'K-Medium', '10', 'Pork', 'Meat Entree'
+'3', 'Children\'s', 'Chow Mein', 'Piquant', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'71', 'Children\'s', 'Egg Foo Young', 'Piquant', 'K-Large', '15', 'Seafood', 'Meat Entree'
+'83', 'Children\'s', 'Chop Suey', 'Piquant', 'K-Medium', '10', 'Beef', 'Meat Entree'
+'220', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'164', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'321', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'265', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '10', 'Chef Special', 'Meat Entree'
+'422', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'366', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'275', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'376', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'200', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Pork', 'Meat Entree'
+'301', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Pork', 'Meat Entree'
+'402', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Pork', 'Meat Entree'
+'210', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'154', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'311', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'255', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Beef', 'Meat Entree'
+'412', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'356', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Beef', 'Meat Entree'
+'163', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'320', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'264', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'421', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'365', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '10', 'Chef Special', 'Meat Entree'
+'189', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'375', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'199', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'300', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Pork', 'Meat Entree'
+'401', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Pork', 'Meat Entree'
+'209', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'153', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'310', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'254', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'411', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'355', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Beef', 'Meat Entree'
+'162', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'234', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'263', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'420', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'364', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'188', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'289', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'198', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'299', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'400', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Pork', 'Meat Entree'
+'208', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'152', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'309', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'253', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'410', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'354', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'161', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'233', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'262', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'334', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'363', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'187', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'288', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'389', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'197', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'298', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'399', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'207', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'151', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'308', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'252', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'409', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'353', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'160', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'232', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'261', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'333', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'362', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'434', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'186', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'287', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'388', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'196', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'297', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'398', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'206', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'150', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'307', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'251', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'408', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'352', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'231', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'260', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'332', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'361', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'433', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'185', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'286', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'387', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'195', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'296', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'397', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'205', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'149', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Beef', 'Meat Entree'
+'306', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'250', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '10', 'Beef', 'Meat Entree'
+'407', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'351', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Beef', 'Meat Entree'
+'230', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'174', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'331', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'360', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Chef Special', 'Meat Entree'
+'432', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'184', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'285', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'386', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'194', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Pork', 'Meat Entree'
+'295', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'396', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'148', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Beef', 'Meat Entree'
+'305', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'249', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Beef', 'Meat Entree'
+'406', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'350', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '10', 'Beef', 'Meat Entree'
+'229', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'173', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'330', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'274', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'431', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'183', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'284', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'385', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Chicken', 'Meat Entree'
+'193', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Pork', 'Meat Entree'
+'294', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Pork', 'Meat Entree'
+'395', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '15', 'Pork', 'Meat Entree'
+'147', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Beef', 'Meat Entree'
+'219', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'248', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Beef', 'Meat Entree'
+'405', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Seafood', 'Meat Entree'
+'349', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Beef', 'Meat Entree'
+'228', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'172', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'329', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'273', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'430', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Vegatables', 'Meat Entree'
+'374', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'182', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'283', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'384', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'192', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Pork', 'Meat Entree'
+'293', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Pork', 'Meat Entree'
+'394', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Pork', 'Meat Entree'
+'146', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Beef', 'Meat Entree'
+'218', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'247', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Beef', 'Meat Entree'
+'319', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'348', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Beef', 'Meat Entree'
+'227', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'171', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'328', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'272', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'429', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'373', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'181', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'282', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'383', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'191', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Pork', 'Meat Entree'
+'292', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Pork', 'Meat Entree'
+'393', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Pork', 'Meat Entree'
+'145', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Beef', 'Meat Entree'
+'217', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'237', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Beef', 'Meat Entree'
+'318', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'347', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Beef', 'Meat Entree'
+'419', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'226', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'170', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'327', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'271', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'428', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'372', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'180', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'281', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'382', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'190', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Pork', 'Meat Entree'
+'291', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Pork', 'Meat Entree'
+'392', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Pork', 'Meat Entree'
+'216', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'235', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Beef', 'Meat Entree'
+'317', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'346', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Beef', 'Meat Entree'
+'418', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'225', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'169', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'326', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'270', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'427', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'371', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'179', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'280', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'381', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'290', 'Evening', 'Egg Foo Young', 'Hot', 'E-Small', '10', 'Pork', 'Meat Entree'
+'391', 'Evening', 'Chop Suey', 'Mild', 'E-Small', '10', 'Pork', 'Meat Entree'
+'215', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'159', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Beef', 'Meat Entree'
+'316', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'345', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Beef', 'Meat Entree'
+'417', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'224', 'Evening', 'Chow Mein', 'Oh My God', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'168', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'325', 'Evening', 'Egg Foo Young', 'Hot', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'269', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'426', 'Evening', 'Chop Suey', 'Mild', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'370', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Chef Special', 'Meat Entree'
+'178', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'279', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'380', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '15', 'Chicken', 'Meat Entree'
+'204', 'Evening', 'Chow Mein', 'Oh My God', 'E-Large', '20', 'Pork', 'Meat Entree'
+'390', 'Evening', 'Chop Suey', 'Hot', 'E-Small', '10', 'Pork', 'Meat Entree'
+'214', 'Evening', 'Chow Mein', 'Oh My God', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'158', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Beef', 'Meat Entree'
+'315', 'Evening', 'Egg Foo Young', 'Hot', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'259', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Beef', 'Meat Entree'
+'416', 'Evening', 'Chop Suey', 'Mild', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'223', 'Evening', 'Chow Mein', 'Tangy', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'167', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'324', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'268', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'425', 'Evening', 'Chop Suey', 'Hot', 'E-Medium', '15', 'Vegatables', 'Meat Entree'
+'369', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'177', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'278', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'379', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'203', 'Evening', 'Chow Mein', 'Tangy', 'E-Large', '20', 'Pork', 'Meat Entree'
+'304', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Large', '20', 'Pork', 'Meat Entree'
+'213', 'Evening', 'Chow Mein', 'Tangy', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'157', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Beef', 'Meat Entree'
+'314', 'Evening', 'Egg Foo Young', 'Oh My God', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'258', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Beef', 'Meat Entree'
+'415', 'Evening', 'Chop Suey', 'Hot', 'E-Large', '20', 'Seafood', 'Meat Entree'
+'359', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Beef', 'Meat Entree'
+'222', 'Evening', 'Chow Mein', 'Piquant', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'166', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'323', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'267', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'424', 'Evening', 'Chop Suey', 'Oh My God', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'368', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'176', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'277', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'378', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'202', 'Evening', 'Chow Mein', 'Piquant', 'E-Large', '20', 'Pork', 'Meat Entree'
+'303', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Large', '20', 'Pork', 'Meat Entree'
+'404', 'Evening', 'Chop Suey', 'Oh My God', 'E-Large', '20', 'Pork', 'Meat Entree'
+'212', 'Evening', 'Chow Mein', 'Piquant', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'156', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Beef', 'Meat Entree'
+'313', 'Evening', 'Egg Foo Young', 'Tangy', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'257', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Beef', 'Meat Entree'
+'414', 'Evening', 'Chop Suey', 'Oh My God', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'358', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Beef', 'Meat Entree'
+'221', 'Evening', 'Chow Mein', 'Mild', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'165', 'Evening', 'Chow Mein', 'Hot', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'322', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'266', 'Evening', 'Egg Foo Young', 'Mild', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'423', 'Evening', 'Chop Suey', 'Tangy', 'E-Small', '10', 'Vegatables', 'Meat Entree'
+'367', 'Evening', 'Chop Suey', 'Piquant', 'E-Medium', '15', 'Chef Special', 'Meat Entree'
+'175', 'Evening', 'Chow Mein', 'Hot', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'276', 'Evening', 'Egg Foo Young', 'Mild', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'377', 'Evening', 'Chop Suey', 'Piquant', 'E-Small', '10', 'Chicken', 'Meat Entree'
+'201', 'Evening', 'Chow Mein', 'Mild', 'E-Large', '20', 'Pork', 'Meat Entree'
+'302', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Large', '20', 'Pork', 'Meat Entree'
+'403', 'Evening', 'Chop Suey', 'Tangy', 'E-Large', '20', 'Pork', 'Meat Entree'
+'211', 'Evening', 'Chow Mein', 'Mild', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'155', 'Evening', 'Chow Mein', 'Hot', 'E-Large', '20', 'Beef', 'Meat Entree'
+'312', 'Evening', 'Egg Foo Young', 'Piquant', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'256', 'Evening', 'Egg Foo Young', 'Mild', 'E-Large', '20', 'Beef', 'Meat Entree'
+'413', 'Evening', 'Chop Suey', 'Tangy', 'E-Medium', '15', 'Seafood', 'Meat Entree'
+'357', 'Evening', 'Chop Suey', 'Piquant', 'E-Large', '20', 'Beef', 'Meat Entree'
+'675', 'Lunch', 'Wonton Soup', 'Tangy', 'Volume', '12', 'bowl', 'Soup'
+'602', 'Lunch', 'Egg Drop Soup', 'Hot', 'Volume', '6', 'cup', 'Soup'
+'729', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'Volume', '6', 'cup', 'Soup'
+'600', 'Lunch', 'Egg Drop Soup', 'Hot', 'L-Medium', '10', 'defined size', 'Soup'
+'503', 'Lunch', 'Shrimp Balls', 'Piquant', 'L-Small', '10', 'n/a', 'Appetizer'
+'641', 'Lunch', 'Egg Drop Soup', 'Mild', 'L-Large', '15', 'defined size', 'Soup'
+'519', 'Lunch', 'Dumplings', 'Tangy', 'L-Small', '10', 'n/a', 'Appetizer'
+'687', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'L-Small', '5', 'defined size', 'Soup'
+'535', 'Lunch', 'Egg Rolls', 'Hot', 'L-Medium', '15', 'n/a', 'Appetizer'
+'728', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'L-Large', '15', 'defined size', 'Soup'
+'551', 'Lunch', 'Crab Rangoon', 'Mild', 'L-Medium', '15', 'n/a', 'Appetizer'
+'775', 'Lunch', 'Egg Drop Soup', 'Piquant', 'L-Large', '15', 'defined size', 'Soup'
+'567', 'Lunch', 'Pork Buns', 'Oh My God', 'L-Medium', '15', 'n/a', 'Appetizer'
+'702', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'Volume', '30', 'gallon', 'Soup'
+'775', 'Lunch', 'Egg Drop Soup', 'Piquant', 'L-Large', '15', 'n/a', 'Appetizer'
+'628', 'Lunch', 'Tofo Soup', 'Mild', 'Volume', '18', 'pint', 'Soup'
+'755', 'Lunch', 'Wonton Soup', 'Oh My God', 'Volume', '18', 'pint', 'Soup'
+'685', 'Lunch', 'Egg Drop Soup', 'Tangy', 'Volume', '24', 'quart', 'Soup'
+'667', 'Lunch', 'Tofo Soup', 'Tangy', 'Volume', '12', 'bowl', 'Soup'
+'594', 'Lunch', 'Wonton Soup', 'Hot', 'Volume', '6', 'cup', 'Soup'
+'721', 'Lunch', 'Egg Drop Soup', 'Piquant', 'Volume', '6', 'cup', 'Soup'
+'599', 'Lunch', 'Egg Drop Soup', 'Hot', 'L-Small', '5', 'defined size', 'Soup'
+'502', 'Lunch', 'Shrimp Balls', 'Oh My God', 'L-Small', '10', 'n/a', 'Appetizer'
+'640', 'Lunch', 'Egg Drop Soup', 'Mild', 'L-Medium', '10', 'defined size', 'Soup'
+'518', 'Lunch', 'Dumplings', 'Piquant', 'L-Small', '10', 'n/a', 'Appetizer'
+'681', 'Lunch', 'Egg Drop Soup', 'Tangy', 'L-Large', '15', 'defined size', 'Soup'
+'534', 'Lunch', 'Egg Rolls', 'Tangy', 'L-Small', '10', 'n/a', 'Appetizer'
+'727', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'L-Medium', '10', 'defined size', 'Soup'
+'550', 'Lunch', 'Crab Rangoon', 'Hot', 'L-Medium', '15', 'n/a', 'Appetizer'
+'769', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Large', '15', 'defined size', 'Soup'
+'566', 'Lunch', 'Pork Buns', 'Mild', 'L-Medium', '15', 'n/a', 'Appetizer'
+'694', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'Volume', '30', 'gallon', 'Soup'
+'774', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '30', 'n/a', 'Appetizer'
+'620', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'Volume', '18', 'pint', 'Soup'
+'747', 'Lunch', 'Tofo Soup', 'Oh My God', 'Volume', '18', 'pint', 'Soup'
+'677', 'Lunch', 'Wonton Soup', 'Tangy', 'Volume', '24', 'quart', 'Soup'
+'659', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'Volume', '12', 'bowl', 'Soup'
+'586', 'Lunch', 'Tofo Soup', 'Hot', 'Volume', '6', 'cup', 'Soup'
+'714', 'Lunch', 'Wonton Soup', 'Piquant', 'Volume', '6', 'cup', 'Soup'
+'587', 'Lunch', 'Tofo Soup', 'Hot', 'Volume', '12', 'bowl', 'Soup'
+'593', 'Lunch', 'Wonton Soup', 'Hot', 'L-Large', '15', 'defined size', 'Soup'
+'501', 'Lunch', 'Shrimp Balls', 'Mild', 'L-Small', '10', 'n/a', 'Appetizer'
+'639', 'Lunch', 'Egg Drop Soup', 'Mild', 'L-Small', '5', 'defined size', 'Soup'
+'517', 'Lunch', 'Dumplings', 'Oh My God', 'L-Small', '10', 'n/a', 'Appetizer'
+'680', 'Lunch', 'Egg Drop Soup', 'Tangy', 'L-Medium', '10', 'defined size', 'Soup'
+'533', 'Lunch', 'Egg Rolls', 'Piquant', 'L-Small', '10', 'n/a', 'Appetizer'
+'726', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'L-Small', '5', 'defined size', 'Soup'
+'549', 'Lunch', 'Crab Rangoon', 'Tangy', 'L-Small', '10', 'n/a', 'Appetizer'
+'768', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Medium', '10', 'defined size', 'Soup'
+'565', 'Lunch', 'Pork Buns', 'Hot', 'L-Medium', '15', 'n/a', 'Appetizer'
+'686', 'Lunch', 'Egg Drop Soup', 'Tangy', 'Volume', '30', 'gallon', 'Soup'
+'773', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '24', 'n/a', 'Appetizer'
+'612', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'Volume', '18', 'pint', 'Soup'
+'739', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'Volume', '18', 'pint', 'Soup'
+'669', 'Lunch', 'Tofo Soup', 'Tangy', 'Volume', '24', 'quart', 'Soup'
+'651', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'Volume', '12', 'bowl', 'Soup'
+'578', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'Volume', '6', 'cup', 'Soup'
+'706', 'Lunch', 'Tofo Soup', 'Piquant', 'Volume', '6', 'cup', 'Soup'
+'579', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'Volume', '12', 'bowl', 'Soup'
+'592', 'Lunch', 'Wonton Soup', 'Hot', 'L-Medium', '10', 'defined size', 'Soup'
+'500', 'Lunch', 'Shrimp Balls', 'Hot', 'L-Small', '10', 'n/a', 'Appetizer'
+'633', 'Lunch', 'Wonton Soup', 'Mild', 'L-Large', '15', 'defined size', 'Soup'
+'516', 'Lunch', 'Dumplings', 'Mild', 'L-Small', '10', 'n/a', 'Appetizer'
+'679', 'Lunch', 'Egg Drop Soup', 'Tangy', 'L-Small', '5', 'defined size', 'Soup'
+'532', 'Lunch', 'Egg Rolls', 'Oh My God', 'L-Small', '10', 'n/a', 'Appetizer'
+'720', 'Lunch', 'Egg Drop Soup', 'Piquant', 'L-Medium', '10', 'defined size', 'Soup'
+'548', 'Lunch', 'Crab Rangoon', 'Piquant', 'L-Small', '10', 'n/a', 'Appetizer'
+'767', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Small', '5', 'defined size', 'Soup'
+'564', 'Lunch', 'Pork Buns', 'Tangy', 'L-Small', '10', 'n/a', 'Appetizer'
+'678', 'Lunch', 'Wonton Soup', 'Tangy', 'Volume', '30', 'gallon', 'Soup'
+'772', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '18', 'n/a', 'Appetizer'
+'604', 'Lunch', 'Egg Drop Soup', 'Hot', 'Volume', '18', 'pint', 'Soup'
+'731', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'Volume', '18', 'pint', 'Soup'
+'661', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'Volume', '24', 'quart', 'Soup'
+'643', 'Lunch', 'Egg Drop Soup', 'Mild', 'Volume', '12', 'bowl', 'Soup'
+'771', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '12', 'bowl', 'Soup'
+'698', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'Volume', '6', 'cup', 'Soup'
+'591', 'Lunch', 'Wonton Soup', 'Hot', 'L-Small', '5', 'defined size', 'Soup'
+'632', 'Lunch', 'Wonton Soup', 'Mild', 'L-Medium', '10', 'defined size', 'Soup'
+'515', 'Lunch', 'Dumplings', 'Hot', 'L-Small', '10', 'n/a', 'Appetizer'
+'673', 'Lunch', 'Wonton Soup', 'Tangy', 'L-Large', '15', 'defined size', 'Soup'
+'531', 'Lunch', 'Egg Rolls', 'Mild', 'L-Small', '10', 'n/a', 'Appetizer'
+'719', 'Lunch', 'Egg Drop Soup', 'Piquant', 'L-Small', '5', 'defined size', 'Soup'
+'547', 'Lunch', 'Crab Rangoon', 'Oh My God', 'L-Small', '10', 'n/a', 'Appetizer'
+'760', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'L-Large', '15', 'defined size', 'Soup'
+'563', 'Lunch', 'Pork Buns', 'Piquant', 'L-Small', '10', 'n/a', 'Appetizer'
+'670', 'Lunch', 'Tofo Soup', 'Tangy', 'Volume', '30', 'gallon', 'Soup'
+'771', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '12', 'n/a', 'Appetizer'
+'596', 'Lunch', 'Wonton Soup', 'Hot', 'Volume', '18', 'pint', 'Soup'
+'723', 'Lunch', 'Egg Drop Soup', 'Piquant', 'Volume', '18', 'pint', 'Soup'
+'653', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'Volume', '24', 'quart', 'Soup'
+'635', 'Lunch', 'Wonton Soup', 'Mild', 'Volume', '12', 'bowl', 'Soup'
+'762', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'Volume', '12', 'bowl', 'Soup'
+'690', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'Volume', '6', 'cup', 'Soup'
+'585', 'Lunch', 'Tofo Soup', 'Hot', 'L-Large', '15', 'defined size', 'Soup'
+'631', 'Lunch', 'Wonton Soup', 'Mild', 'L-Small', '5', 'defined size', 'Soup'
+'514', 'Lunch', 'Shrimp Balls', 'Tangy', 'L-Large', '20', 'n/a', 'Appetizer'
+'672', 'Lunch', 'Wonton Soup', 'Tangy', 'L-Medium', '10', 'defined size', 'Soup'
+'530', 'Lunch', 'Egg Rolls', 'Hot', 'L-Small', '10', 'n/a', 'Appetizer'
+'713', 'Lunch', 'Wonton Soup', 'Piquant', 'L-Large', '15', 'defined size', 'Soup'
+'546', 'Lunch', 'Crab Rangoon', 'Mild', 'L-Small', '10', 'n/a', 'Appetizer'
+'759', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'L-Medium', '10', 'defined size', 'Soup'
+'562', 'Lunch', 'Pork Buns', 'Oh My God', 'L-Small', '10', 'n/a', 'Appetizer'
+'662', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'Volume', '30', 'gallon', 'Soup'
+'770', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '6', 'n/a', 'Appetizer'
+'588', 'Lunch', 'Tofo Soup', 'Hot', 'Volume', '18', 'pint', 'Soup'
+'716', 'Lunch', 'Wonton Soup', 'Piquant', 'Volume', '18', 'pint', 'Soup'
+'645', 'Lunch', 'Egg Drop Soup', 'Mild', 'Volume', '24', 'quart', 'Soup'
+'773', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '24', 'quart', 'Soup'
+'627', 'Lunch', 'Tofo Soup', 'Mild', 'Volume', '12', 'bowl', 'Soup'
+'754', 'Lunch', 'Wonton Soup', 'Oh My God', 'Volume', '12', 'bowl', 'Soup'
+'682', 'Lunch', 'Egg Drop Soup', 'Tangy', 'Volume', '6', 'cup', 'Soup'
+'584', 'Lunch', 'Tofo Soup', 'Hot', 'L-Medium', '10', 'defined size', 'Soup'
+'625', 'Lunch', 'Tofo Soup', 'Mild', 'L-Large', '15', 'defined size', 'Soup'
+'513', 'Lunch', 'Shrimp Balls', 'Piquant', 'L-Large', '20', 'n/a', 'Appetizer'
+'671', 'Lunch', 'Wonton Soup', 'Tangy', 'L-Small', '5', 'defined size', 'Soup'
+'529', 'Lunch', 'Dumplings', 'Tangy', 'L-Large', '20', 'n/a', 'Appetizer'
+'712', 'Lunch', 'Wonton Soup', 'Piquant', 'L-Medium', '10', 'defined size', 'Soup'
+'545', 'Lunch', 'Crab Rangoon', 'Hot', 'L-Small', '10', 'n/a', 'Appetizer'
+'758', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'L-Small', '5', 'defined size', 'Soup'
+'561', 'Lunch', 'Pork Buns', 'Mild', 'L-Small', '10', 'n/a', 'Appetizer'
+'654', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'Volume', '30', 'gallon', 'Soup'
+'769', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Large', '15', 'n/a', 'Appetizer'
+'580', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'Volume', '18', 'pint', 'Soup'
+'708', 'Lunch', 'Tofo Soup', 'Piquant', 'Volume', '18', 'pint', 'Soup'
+'637', 'Lunch', 'Wonton Soup', 'Mild', 'Volume', '24', 'quart', 'Soup'
+'764', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'Volume', '24', 'quart', 'Soup'
+'619', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'Volume', '12', 'bowl', 'Soup'
+'746', 'Lunch', 'Tofo Soup', 'Oh My God', 'Volume', '12', 'bowl', 'Soup'
+'674', 'Lunch', 'Wonton Soup', 'Tangy', 'Volume', '6', 'cup', 'Soup'
+'583', 'Lunch', 'Tofo Soup', 'Hot', 'L-Small', '5', 'defined size', 'Soup'
+'624', 'Lunch', 'Tofo Soup', 'Mild', 'L-Medium', '10', 'defined size', 'Soup'
+'512', 'Lunch', 'Shrimp Balls', 'Oh My God', 'L-Large', '20', 'n/a', 'Appetizer'
+'665', 'Lunch', 'Tofo Soup', 'Tangy', 'L-Large', '15', 'defined size', 'Soup'
+'528', 'Lunch', 'Dumplings', 'Piquant', 'L-Large', '20', 'n/a', 'Appetizer'
+'711', 'Lunch', 'Wonton Soup', 'Piquant', 'L-Small', '5', 'defined size', 'Soup'
+'544', 'Lunch', 'Egg Rolls', 'Tangy', 'L-Large', '20', 'n/a', 'Appetizer'
+'752', 'Lunch', 'Wonton Soup', 'Oh My God', 'L-Large', '15', 'defined size', 'Soup'
+'560', 'Lunch', 'Pork Buns', 'Hot', 'L-Small', '10', 'n/a', 'Appetizer'
+'646', 'Lunch', 'Egg Drop Soup', 'Mild', 'Volume', '30', 'gallon', 'Soup'
+'768', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Medium', '10', 'n/a', 'Appetizer'
+'774', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '30', 'gallon', 'Soup'
+'700', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'Volume', '18', 'pint', 'Soup'
+'629', 'Lunch', 'Tofo Soup', 'Mild', 'Volume', '24', 'quart', 'Soup'
+'756', 'Lunch', 'Wonton Soup', 'Oh My God', 'Volume', '24', 'quart', 'Soup'
+'611', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'Volume', '12', 'bowl', 'Soup'
+'738', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'Volume', '12', 'bowl', 'Soup'
+'666', 'Lunch', 'Tofo Soup', 'Tangy', 'Volume', '6', 'cup', 'Soup'
+'577', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'L-Large', '15', 'defined size', 'Soup'
+'623', 'Lunch', 'Tofo Soup', 'Mild', 'L-Small', '5', 'defined size', 'Soup'
+'511', 'Lunch', 'Shrimp Balls', 'Mild', 'L-Large', '20', 'n/a', 'Appetizer'
+'664', 'Lunch', 'Tofo Soup', 'Tangy', 'L-Medium', '10', 'defined size', 'Soup'
+'527', 'Lunch', 'Dumplings', 'Oh My God', 'L-Large', '20', 'n/a', 'Appetizer'
+'705', 'Lunch', 'Tofo Soup', 'Piquant', 'L-Large', '15', 'defined size', 'Soup'
+'543', 'Lunch', 'Egg Rolls', 'Piquant', 'L-Large', '20', 'n/a', 'Appetizer'
+'751', 'Lunch', 'Wonton Soup', 'Oh My God', 'L-Medium', '10', 'defined size', 'Soup'
+'559', 'Lunch', 'Crab Rangoon', 'Tangy', 'L-Large', '20', 'n/a', 'Appetizer'
+'638', 'Lunch', 'Wonton Soup', 'Mild', 'Volume', '30', 'gallon', 'Soup'
+'767', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'L-Small', '5', 'n/a', 'Appetizer'
+'765', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'Volume', '30', 'gallon', 'Soup'
+'692', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'Volume', '18', 'pint', 'Soup'
+'621', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'Volume', '24', 'quart', 'Soup'
+'748', 'Lunch', 'Tofo Soup', 'Oh My God', 'Volume', '24', 'quart', 'Soup'
+'603', 'Lunch', 'Egg Drop Soup', 'Hot', 'Volume', '12', 'bowl', 'Soup'
+'730', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'Volume', '12', 'bowl', 'Soup'
+'658', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'Volume', '6', 'cup', 'Soup'
+'576', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'L-Medium', '10', 'defined size', 'Soup'
+'617', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'L-Large', '15', 'defined size', 'Soup'
+'510', 'Lunch', 'Shrimp Balls', 'Hot', 'L-Large', '20', 'n/a', 'Appetizer'
+'663', 'Lunch', 'Tofo Soup', 'Tangy', 'L-Small', '5', 'defined size', 'Soup'
+'526', 'Lunch', 'Dumplings', 'Mild', 'L-Large', '20', 'n/a', 'Appetizer'
+'704', 'Lunch', 'Tofo Soup', 'Piquant', 'L-Medium', '10', 'defined size', 'Soup'
+'542', 'Lunch', 'Egg Rolls', 'Oh My God', 'L-Large', '20', 'n/a', 'Appetizer'
+'750', 'Lunch', 'Wonton Soup', 'Oh My God', 'L-Small', '5', 'defined size', 'Soup'
+'558', 'Lunch', 'Crab Rangoon', 'Piquant', 'L-Large', '20', 'n/a', 'Appetizer'
+'630', 'Lunch', 'Tofo Soup', 'Mild', 'Volume', '30', 'gallon', 'Soup'
+'574', 'Lunch', 'Pork Buns', 'Tangy', 'L-Large', '20', 'n/a', 'Appetizer'
+'757', 'Lunch', 'Wonton Soup', 'Oh My God', 'Volume', '30', 'gallon', 'Soup'
+'684', 'Lunch', 'Egg Drop Soup', 'Tangy', 'Volume', '18', 'pint', 'Soup'
+'613', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'Volume', '24', 'quart', 'Soup'
+'740', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'Volume', '24', 'quart', 'Soup'
+'595', 'Lunch', 'Wonton Soup', 'Hot', 'Volume', '12', 'bowl', 'Soup'
+'722', 'Lunch', 'Egg Drop Soup', 'Piquant', 'Volume', '12', 'bowl', 'Soup'
+'650', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'Volume', '6', 'cup', 'Soup'
+'575', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'L-Small', '5', 'defined size', 'Soup'
+'616', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'L-Medium', '10', 'defined size', 'Soup'
+'509', 'Lunch', 'Shrimp Balls', 'Tangy', 'L-Medium', '15', 'n/a', 'Appetizer'
+'657', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'L-Large', '15', 'defined size', 'Soup'
+'525', 'Lunch', 'Dumplings', 'Hot', 'L-Large', '20', 'n/a', 'Appetizer'
+'703', 'Lunch', 'Tofo Soup', 'Piquant', 'L-Small', '5', 'defined size', 'Soup'
+'541', 'Lunch', 'Egg Rolls', 'Mild', 'L-Large', '20', 'n/a', 'Appetizer'
+'744', 'Lunch', 'Tofo Soup', 'Oh My God', 'L-Large', '15', 'defined size', 'Soup'
+'557', 'Lunch', 'Crab Rangoon', 'Oh My God', 'L-Large', '20', 'n/a', 'Appetizer'
+'622', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'Volume', '30', 'gallon', 'Soup'
+'573', 'Lunch', 'Pork Buns', 'Piquant', 'L-Large', '20', 'n/a', 'Appetizer'
+'749', 'Lunch', 'Tofo Soup', 'Oh My God', 'Volume', '30', 'gallon', 'Soup'
+'676', 'Lunch', 'Wonton Soup', 'Tangy', 'Volume', '18', 'pint', 'Soup'
+'605', 'Lunch', 'Egg Drop Soup', 'Hot', 'Volume', '24', 'quart', 'Soup'
+'732', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'Volume', '24', 'quart', 'Soup'
+'715', 'Lunch', 'Wonton Soup', 'Piquant', 'Volume', '12', 'bowl', 'Soup'
+'642', 'Lunch', 'Egg Drop Soup', 'Mild', 'Volume', '6', 'cup', 'Soup'
+'770', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '6', 'cup', 'Soup'
+'615', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'L-Small', '5', 'defined size', 'Soup'
+'508', 'Lunch', 'Shrimp Balls', 'Piquant', 'L-Medium', '15', 'n/a', 'Appetizer'
+'656', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'L-Medium', '10', 'defined size', 'Soup'
+'524', 'Lunch', 'Dumplings', 'Tangy', 'L-Medium', '15', 'n/a', 'Appetizer'
+'697', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'L-Large', '15', 'defined size', 'Soup'
+'540', 'Lunch', 'Egg Rolls', 'Hot', 'L-Large', '20', 'n/a', 'Appetizer'
+'743', 'Lunch', 'Tofo Soup', 'Oh My God', 'L-Medium', '10', 'defined size', 'Soup'
+'556', 'Lunch', 'Crab Rangoon', 'Mild', 'L-Large', '20', 'n/a', 'Appetizer'
+'614', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'Volume', '30', 'gallon', 'Soup'
+'572', 'Lunch', 'Pork Buns', 'Oh My God', 'L-Large', '20', 'n/a', 'Appetizer'
+'741', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'Volume', '30', 'gallon', 'Soup'
+'668', 'Lunch', 'Tofo Soup', 'Tangy', 'Volume', '18', 'pint', 'Soup'
+'597', 'Lunch', 'Wonton Soup', 'Hot', 'Volume', '24', 'quart', 'Soup'
+'724', 'Lunch', 'Egg Drop Soup', 'Piquant', 'Volume', '24', 'quart', 'Soup'
+'707', 'Lunch', 'Tofo Soup', 'Piquant', 'Volume', '12', 'bowl', 'Soup'
+'634', 'Lunch', 'Wonton Soup', 'Mild', 'Volume', '6', 'cup', 'Soup'
+'761', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'Volume', '6', 'cup', 'Soup'
+'609', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'L-Large', '15', 'defined size', 'Soup'
+'507', 'Lunch', 'Shrimp Balls', 'Oh My God', 'L-Medium', '15', 'n/a', 'Appetizer'
+'655', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'L-Small', '5', 'defined size', 'Soup'
+'523', 'Lunch', 'Dumplings', 'Piquant', 'L-Medium', '15', 'n/a', 'Appetizer'
+'696', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'L-Medium', '10', 'defined size', 'Soup'
+'539', 'Lunch', 'Egg Rolls', 'Tangy', 'L-Medium', '15', 'n/a', 'Appetizer'
+'742', 'Lunch', 'Tofo Soup', 'Oh My God', 'L-Small', '5', 'defined size', 'Soup'
+'555', 'Lunch', 'Crab Rangoon', 'Hot', 'L-Large', '20', 'n/a', 'Appetizer'
+'606', 'Lunch', 'Egg Drop Soup', 'Hot', 'Volume', '30', 'gallon', 'Soup'
+'571', 'Lunch', 'Pork Buns', 'Mild', 'L-Large', '20', 'n/a', 'Appetizer'
+'733', 'Lunch', 'Cream of Mushroom Soup', 'Piquant', 'Volume', '30', 'gallon', 'Soup'
+'660', 'Lunch', 'Chicken Noddle Soup', 'Tangy', 'Volume', '18', 'pint', 'Soup'
+'589', 'Lunch', 'Tofo Soup', 'Hot', 'Volume', '24', 'quart', 'Soup'
+'717', 'Lunch', 'Wonton Soup', 'Piquant', 'Volume', '24', 'quart', 'Soup'
+'699', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'Volume', '12', 'bowl', 'Soup'
+'626', 'Lunch', 'Tofo Soup', 'Mild', 'Volume', '6', 'cup', 'Soup'
+'753', 'Lunch', 'Wonton Soup', 'Oh My God', 'Volume', '6', 'cup', 'Soup'
+'608', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'L-Medium', '10', 'defined size', 'Soup'
+'506', 'Lunch', 'Shrimp Balls', 'Mild', 'L-Medium', '15', 'n/a', 'Appetizer'
+'649', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'L-Large', '15', 'defined size', 'Soup'
+'522', 'Lunch', 'Dumplings', 'Oh My God', 'L-Medium', '15', 'n/a', 'Appetizer'
+'695', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'L-Small', '5', 'defined size', 'Soup'
+'538', 'Lunch', 'Egg Rolls', 'Piquant', 'L-Medium', '15', 'n/a', 'Appetizer'
+'736', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'L-Large', '15', 'defined size', 'Soup'
+'554', 'Lunch', 'Crab Rangoon', 'Tangy', 'L-Medium', '15', 'n/a', 'Appetizer'
+'598', 'Lunch', 'Wonton Soup', 'Hot', 'Volume', '30', 'gallon', 'Soup'
+'570', 'Lunch', 'Pork Buns', 'Hot', 'L-Large', '20', 'n/a', 'Appetizer'
+'725', 'Lunch', 'Egg Drop Soup', 'Piquant', 'Volume', '30', 'gallon', 'Soup'
+'652', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'Volume', '18', 'pint', 'Soup'
+'581', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'Volume', '24', 'quart', 'Soup'
+'709', 'Lunch', 'Tofo Soup', 'Piquant', 'Volume', '24', 'quart', 'Soup'
+'691', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'Volume', '12', 'bowl', 'Soup'
+'618', 'Lunch', 'Chicken Noddle Soup', 'Mild', 'Volume', '6', 'cup', 'Soup'
+'745', 'Lunch', 'Tofo Soup', 'Oh My God', 'Volume', '6', 'cup', 'Soup'
+'607', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'L-Small', '5', 'defined size', 'Soup'
+'505', 'Lunch', 'Shrimp Balls', 'Hot', 'L-Medium', '15', 'n/a', 'Appetizer'
+'648', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'L-Medium', '10', 'defined size', 'Soup'
+'521', 'Lunch', 'Dumplings', 'Mild', 'L-Medium', '15', 'n/a', 'Appetizer'
+'689', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'L-Large', '15', 'defined size', 'Soup'
+'537', 'Lunch', 'Egg Rolls', 'Oh My God', 'L-Medium', '15', 'n/a', 'Appetizer'
+'735', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'L-Medium', '10', 'defined size', 'Soup'
+'553', 'Lunch', 'Crab Rangoon', 'Piquant', 'L-Medium', '15', 'n/a', 'Appetizer'
+'590', 'Lunch', 'Tofo Soup', 'Hot', 'Volume', '30', 'gallon', 'Soup'
+'569', 'Lunch', 'Pork Buns', 'Tangy', 'L-Medium', '15', 'n/a', 'Appetizer'
+'718', 'Lunch', 'Wonton Soup', 'Piquant', 'Volume', '30', 'gallon', 'Soup'
+'644', 'Lunch', 'Egg Drop Soup', 'Mild', 'Volume', '18', 'pint', 'Soup'
+'772', 'Lunch', 'Cream of Mushroom Soup', 'Oh My God', 'Volume', '18', 'pint', 'Soup'
+'701', 'Lunch', 'Chicken Noddle Soup', 'Piquant', 'Volume', '24', 'quart', 'Soup'
+'683', 'Lunch', 'Egg Drop Soup', 'Tangy', 'Volume', '12', 'bowl', 'Soup'
+'610', 'Lunch', 'Cream of Mushroom Soup', 'Hot', 'Volume', '6', 'cup', 'Soup'
+'737', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'Volume', '6', 'cup', 'Soup'
+'601', 'Lunch', 'Egg Drop Soup', 'Hot', 'L-Large', '15', 'defined size', 'Soup'
+'504', 'Lunch', 'Shrimp Balls', 'Tangy', 'L-Small', '10', 'n/a', 'Appetizer'
+'647', 'Lunch', 'Cream of Mushroom Soup', 'Mild', 'L-Small', '5', 'defined size', 'Soup'
+'520', 'Lunch', 'Dumplings', 'Hot', 'L-Medium', '15', 'n/a', 'Appetizer'
+'688', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'L-Medium', '10', 'defined size', 'Soup'
+'536', 'Lunch', 'Egg Rolls', 'Mild', 'L-Medium', '15', 'n/a', 'Appetizer'
+'734', 'Lunch', 'Chicken Noddle Soup', 'Oh My God', 'L-Small', '5', 'defined size', 'Soup'
+'552', 'Lunch', 'Crab Rangoon', 'Oh My God', 'L-Medium', '15', 'n/a', 'Appetizer'
+'582', 'Lunch', 'Chicken Noddle Soup', 'Hot', 'Volume', '30', 'gallon', 'Soup'
+'568', 'Lunch', 'Pork Buns', 'Piquant', 'L-Medium', '15', 'n/a', 'Appetizer'
+'710', 'Lunch', 'Tofo Soup', 'Piquant', 'Volume', '30', 'gallon', 'Soup'
+'636', 'Lunch', 'Wonton Soup', 'Mild', 'Volume', '18', 'pint', 'Soup'
+'763', 'Lunch', 'Egg Drop Soup', 'Oh My God', 'Volume', '18', 'pint', 'Soup'
+'693', 'Lunch', 'Cream of Mushroom Soup', 'Tangy', 'Volume', '24', 'quart', 'Soup'
+'791', 'Sun Brunch Buffet', 'Crab Rangoon', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'790', 'Sun Brunch Buffet', 'Crab Rangoon', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'789', 'Sun Brunch Buffet', 'Egg Rolls', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'805', 'Sun Brunch Buffet', 'Shrimp Balls', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'788', 'Sun Brunch Buffet', 'Egg Rolls', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'804', 'Sun Brunch Buffet', 'Pork Buns', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'787', 'Sun Brunch Buffet', 'Egg Rolls', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+'803', 'Sun Brunch Buffet', 'Pork Buns', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'786', 'Sun Brunch Buffet', 'Egg Rolls', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'802', 'Sun Brunch Buffet', 'Pork Buns', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+'785', 'Sun Brunch Buffet', 'Egg Rolls', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'801', 'Sun Brunch Buffet', 'Pork Buns', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'784', 'Sun Brunch Buffet', 'Dumplings', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'800', 'Sun Brunch Buffet', 'Pork Buns', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'783', 'Sun Brunch Buffet', 'Dumplings', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'799', 'Sun Brunch Buffet', 'Lettuce Wraps', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'782', 'Sun Brunch Buffet', 'Dumplings', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+'798', 'Sun Brunch Buffet', 'Lettuce Wraps', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'781', 'Sun Brunch Buffet', 'Dumplings', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'797', 'Sun Brunch Buffet', 'Lettuce Wraps', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+'780', 'Sun Brunch Buffet', 'Dumplings', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'796', 'Sun Brunch Buffet', 'Lettuce Wraps', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'779', 'Sun Brunch Buffet', 'Shrimp Balls', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'795', 'Sun Brunch Buffet', 'Lettuce Wraps', 'Hot', 'all you can eat', '0', 'n/a', 'Appetizer'
+'778', 'Sun Brunch Buffet', 'Shrimp Balls', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'794', 'Sun Brunch Buffet', 'Crab Rangoon', 'Tangy', 'all you can eat', '0', 'n/a', 'Appetizer'
+'777', 'Sun Brunch Buffet', 'Shrimp Balls', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+'793', 'Sun Brunch Buffet', 'Crab Rangoon', 'Piquant', 'all you can eat', '0', 'n/a', 'Appetizer'
+'776', 'Sun Brunch Buffet', 'Shrimp Balls', 'Mild', 'all you can eat', '0', 'n/a', 'Appetizer'
+'792', 'Sun Brunch Buffet', 'Crab Rangoon', 'Oh My God', 'all you can eat', '0', 'n/a', 'Appetizer'
+
+#additional queries
+/*p1. Return the name of the sous chefs that are an expert in a recipe and is teaching it to another sous chef*/
+select Person.fname, Person.lname from Mentorship
+inner join Person
+on Person.ID = Mentorship.mentorID;
+
+# fname, lname
+'Arwin', 'Hernandez'
+'Jaxx', 'Harrison'
+'Walter', 'Peters'
+
+
+/*p2.Return the name of the head chef that worked at the end of the first week of December during 2019*/
+select Person.fname, Person.lname 
+from Shift
+inner join Person
+on Person.ID = Shift.chefid
+where Shift.workdate = '2019-12-07';
+
+# fname, lname
+'Amal', 'Keith'
+
+/*p3. Return the orderID, orderTime, orderTimeReady for a to-go order.*/
+select orderID, orderTime, orderTimeReady from ToGoOrder;
+
+6	10:15:00	13:15:00
+7	10:25:00	13:25:00
+8	11:40:00	14:40:00
+9	12:00:00	15:00:00
+10	13:20:00	16:20:00
+11	13:50:00	16:50:00
+12	14:20:00	17:20:00
+13	15:45:00	18:45:00
+14	17:35:00	20:35:00
+15	18:35:00	21:35:00
+		
+
+
+
+
+
+

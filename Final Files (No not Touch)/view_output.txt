@@ -1,0 +1,97 @@
+# Customer_address_V
+
+# Account, Customer ID, First Name, Last Name, Snail Mail, E-Mail, Department, Corporation ID
+'Individual', '1', 'Jason', 'Tran', '8796 Arnold Street Cincinnati, OH 45211', 'rnewman@optonline.net', 'N/A', 'N/A'
+'Individual', '2', 'Matthew', 'Pham', '10 Stillwater Lane\nAtlanta, GA 30303', 'aglassis@optonline.net', 'N/A', 'N/A'
+'Individual', '3', 'Sonia', 'Mcleod', '9039 Arlington Road\nCoatesville, PA 19320', 'bulletin@outlook.com', 'N/A', 'N/A'
+'Individual', '4', 'Siena', 'Prentice', '833 Cherry Hill St.\nWoonsocket, RI 02895', 'sarahs@yahoo.ca', 'N/A', 'N/A'
+'Individual', '5', 'Zeynep', 'Lynch', '12 Warren Dr.\nCarmel, NY 10512', 'trieuvan@verizon.net', 'N/A', 'N/A'
+'Individual', '6', 'Amara', 'Own', '36 West St Margarets Lane\nEaston, PA 18042', 'gslondon@me.com', 'N/A', 'N/A'
+'Individual', '7', 'Chanice', 'Whiteley', '600 Vine Ave.\nLincoln, NE 68506', 'haddawy@icloud.com', 'N/A', 'N/A'
+'Individual', '8', 'Linda', 'Beck', '104 Green Lake Dr.\nUpland, CA 91784', 'netsfr@yahoo.com', 'N/A', 'N/A'
+'Individual', '9', 'Brielle', 'O\'Ryan', '8204 Glen Creek Ave.\nNicholasville, KY 40356', 'willg@msn.com', 'N/A', 'N/A'
+'Individual', '10', 'Makayla', 'Tyler', '27 N. Oakwood St.\nKalamazoo, MI 49009', 'weazelman@att.net', 'N/A', 'N/A'
+'Google', '11', 'Ocean', 'Mckenna', 'Google Ave', 'gmail@gmail.com', 'Business', '1'
+'Odds and Ends', '12', 'Wilson', 'Mcphee', '32 Walt Whitman St.\nAltamonte Springs, FL 32714', 'oddsandends@gmail.com', 'Marketing', '2'
+'Handy Help', '13', 'Lillie', 'Nolan', '763 El Dorado Dr.\nWinter Springs, FL 32708', 'handyhelp@gmail.com', 'Service', '3'
+'Nick\'S Knack', '14', 'Mariya', 'Poole', '16 N. Atlantic St.\nMooresville, NC 28115', 'nicksknack@gmail.com', 'HR', '4'
+'Here And There and Everywhere', '15', 'Tia', 'Emonds', '814 East Maiden Court\nManchester Township, NJ 08759', 'hereandthere@gmail.com', 'Business', '5'
+'E Cetera', '16', 'Jessie', 'Koch', '1 Adams Street\nThomasville, NC 27360', 'ecetera@gmail.com', 'HR', '6'
+'Closet Of Choices', '17', 'Tillie', 'Hardin', '29 Clay St.\nWisconsin Rapids, WI 54494', 'closetofchoices@gmail.com', 'HR', '7'
+'Assorted Assets', '18', 'Sila', 'Strong', '1 Hall Road\nWest Bend, WI 53095', 'assortedassets@gmail.com', 'Business', '8'
+'Trust Assortment', '19', 'Katerina', 'Conroy', '192 Mill Ave.\nFreehold, NJ 07728', 'trustassortment@gmail.com', 'Marketing', '9'
+'Anonymous', '20', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+'Anonymous', '21', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+'Anonymous', '22', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+'Anonymous', '23', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+'Anonymous', '24', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+'Anonymous', '25', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A'
+
+
+#Customer_Sales_V
+# Year, First Name, Last Name, Total Spent in Year
+# custID, fName, lName, total
+'8', 'Linda', 'Beck', '265'
+'7', 'Chanice', 'Whiteley', '100'
+'6', 'Amara', 'Own', '70'
+'12', 'Wilson', 'Mcphee', '60'
+'22', 'Ruairi', 'Bates', '60'
+'11', 'Ocean', 'Mckenna', '54'
+'3', 'Sonia', 'Mcleod', '50'
+'21', 'Arslan', 'Pcikett', '48'
+'15', 'Tia', 'Emonds', '40'
+'2', 'Matthew', 'Pham', '40'
+'25', 'Rocco', 'Braun', '30'
+'16', 'Jessie', 'Koch', '30'
+'20', 'Zoha', 'Sheppard', '30'
+'5', 'Zeynep', 'Lynch', '30'
+'24', 'Cindy', 'Sheehan', '20'
+'13', 'Lillie', 'Nolan', '20'
+'14', 'Mariya', 'Poole', '20'
+'1', 'Jason', 'Tran', '20'
+'17', 'Tillie', 'Hardin', '15'
+'18', 'Sila', 'Strong', '15'
+'19', 'Katerina', 'Conroy', '15'
+'4', 'Siena', 'Prentice', '12'
+'23', 'Brook', 'Morgan', '10'
+'10', 'Makayla', 'Tyler', '6'
+'9', 'Brielle', 'O\'Ryan', '5'
+
+
+
+#Customer Value_v
+# YEAR(chequeDate), custID, fName, lName, total
+'2019', '8', 'Linda', 'Beck', '265'
+'2019', '7', 'Chanice', 'Whiteley', '100'
+'2019', '6', 'Amara', 'Own', '70'
+'2019', '22', 'Ruairi', 'Bates', '60'
+'2019', '12', 'Wilson', 'Mcphee', '60'
+'2019', '11', 'Ocean', 'Mckenna', '54'
+'2019', '3', 'Sonia', 'Mcleod', '50'
+'2019', '21', 'Arslan', 'Pcikett', '48'
+'2019', '2', 'Matthew', 'Pham', '40'
+'2019', '15', 'Tia', 'Emonds', '40'
+'2019', '20', 'Zoha', 'Sheppard', '30'
+'2019', '5', 'Zeynep', 'Lynch', '30'
+'2019', '25', 'Rocco', 'Braun', '30'
+'2019', '16', 'Jessie', 'Koch', '30'
+'2019', '24', 'Cindy', 'Sheehan', '20'
+'2019', '13', 'Lillie', 'Nolan', '20'
+'2019', '14', 'Mariya', 'Poole', '20'
+'2019', '1', 'Jason', 'Tran', '20'
+'2019', '18', 'Sila', 'Strong', '15'
+'2019', '19', 'Katerina', 'Conroy', '15'
+'2019', '17', 'Tillie', 'Hardin', '15'
+'2019', '4', 'Siena', 'Prentice', '12'
+'2019', '23', 'Brook', 'Morgan', '10'
+'2019', '10', 'Makayla', 'Tyler', '6'
+'2019', '9', 'Brielle', 'O\'Ryan', '5'
+
+
+#Sous_mentor_v
+# Mentor First Name, Mentor Last Name, Mentee First Name, Mentee Last Name, Skill, Start Date
+'Arwin', 'Hernandez', 'Walter', 'Peters', 'Egg Foo Young', '2019-11-02'
+'Jaxx', 'Harrison', 'Arwin', 'Hernandez', 'Egg Rolls', '2019-11-03'
+'Walter', 'Peters', 'Jaxx', 'Harrison', 'Pork Buns', '2019-11-01'
+
+
