@@ -58,7 +58,7 @@ USING (menuItemID)
 -- GROUP BY 'Year', 'First Name', 'Last Name'
 ORDER BY 'Year';
 
-SELECT YEAR(chequeDate) AS 'Year', fName AS 'First Name', lName AS 'Last Name'
+SELECT YEAR(chequeDate) AS 'Year', fName AS 'First Name', lName AS 'Last Name', price AS 'Spent'
 FROM MenuItem
 INNER JOIN OrderLine
 USING (menuItemID)
@@ -70,6 +70,18 @@ INNER JOIN Person
 On Cheque.custID = Person.ID;
 -- GROUP BY 'Year', 'First Name', 'Last Name'
 ORDER BY 'Year';
+
+SELECT * FROM OrderLine;
+SELECT * FROM MenuItem;
+
+SELECT YEAR(chequeDate) AS 'Year', price AS 'Spent'
+FROM MenuItem
+INNER JOIN OrderLine
+USING (menuItemID)
+INNER JOIN Orders
+USING (orderID)
+INNER JOIN Cheque
+USING (chequeID);
 
 /*Customer_Value_v – List each customer and the total $ amount of their orders for the
 past year, in order of the value of customer orders, from highest to the lowest.*/

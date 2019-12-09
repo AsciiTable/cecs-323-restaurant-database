@@ -81,19 +81,7 @@ insert into Recipe (recipeName,CHEFID) Values
 ('Lettuce Wraps',32),
 ('Pork Buns',32);
 
-insert into Cook(eID)
-values
-(28),
-(29),
-(30),
-(31),
-(32),
-(39),
-(40),
-(41),
-(43),
-(44),
-(45);
+
 
 --LINE COOK
 

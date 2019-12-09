@@ -109,7 +109,7 @@ CREATE TABLE Recipe(
     /*eID: the ID of the Head Chef*/
     chefID int NOT NULL,
     
-    CONSTRAINT recipe_fk_1 FORIEGN KEY (chefID) REFERENCES HeadChef (eID),
+    CONSTRAINT recipe_fk_1 FOREIGN KEY (chefID) REFERENCES HeadChef (eID),
     CONSTRAINT recipe_pk PRIMARY KEY (recipeName)
 );
 /* Creates the recipe ingredient table
