@@ -1,0 +1,21 @@
+
+9. A sous chef can only mentor one person at a time.
+
+/*
+Trigger keeps users from allowing a sous chef to mentor more than one person at a time.
+Tells the user that a sous chef is already mentoring someone if they try to insert a mentorID that is already in another row
+/*
+delimiter $$
+create trigger oneMentee before insert on Mentorship
+	for each row
+	BEGIN
+		IF EXISTS (SELECT * FROM Mentorship WHERE Mentorship.mentorID = NEW.mentorID) THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Sous chef is already mentoring someone!';
+		END IF;
+	END; $$
+delimiter;
+
+
+
+
+10. 
