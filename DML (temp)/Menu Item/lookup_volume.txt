@@ -3,4 +3,5 @@ insert into lookup_volume (volume) values
 ("bowl"),
 ("pint"),
 ("quart"),
-("gallon");
+("gallon")
+("defined size");
