@@ -82,6 +82,12 @@ CREATE TABLE CorporateRepresentative(
 );
 /* --------------------------- END CUSTOMER SECTION --------------------------- */
 /* --------------------------- EMPLOYEE SECTION --------------------------- */
+CREATE TABLE lookup_role(
+	/*roleName: the name of the role they are responsible for*/
+	roleNAME varchar(20) NOT NULL,
+    
+    CONSTRAINT lookuprole_pk PRIMARY KEY (roleName)
+);
 /* Creates Employee Table
 	Holds the employee ID, pay rate, and role name of the employee*/
 CREATE TABLE Employee(
@@ -93,6 +99,7 @@ CREATE TABLE Employee(
     roleName varchar(20) NOT NULL,
     
     CONSTRAINT emp_fk_1 FOREIGN KEY (eID) REFERENCES Person(ID),
+    CONSTRAINT emp_fk_2 FOREIGN KEY (roleName) REFERENCES lookup_role(roleName),
     CONSTRAINT emp_pk PRIMARY KEY (eID)
 );
 /* Creates the lookup table for ingredient
