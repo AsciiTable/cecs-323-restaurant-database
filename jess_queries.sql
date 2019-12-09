@@ -50,12 +50,40 @@ INNER JOIN Person
 ON SousChef.eID = Person.ID
 GROUP BY eID;
 
+/*d. Find all of the sous chefs who have three or more menu items in common.*/
+SELECT p1.fName AS 'Chef 1 First Name', p1.lName AS 'Chef 1 Last Name', p2.fName AS 'Chef 2 First Name', p2.lName AS 'Chef 2 Last Name'
+FROM (SELECT e1.eID 'Chef1', e2.eID 'Chef2', COUNT(*) AS 'Pairs'
+	FROM Expertise e1, Expertise e2
+	WHERE e1.eID < e2.eID AND e1.recipeName = e2.recipeName
+	GROUP BY e1.eID, e2.eID) t1
+INNER JOIN Person p1
+ON t1.Chef1 = p1.ID
+INNER JOIN Person p2
+ON t1.Chef2 = p2.ID
+WHERE t1.Pairs >= 3;
+
+/*Matt's Queries*/
+/*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
+the sous chef is passing along to the other sous chefs.*/
+
+SELECT mentorID, recipeName
+FROM Mentorship
+WHERE enddate IS NULL;
 
 
 
+/*M. Find the three menu items that have the fewest sous chefs skilled in those menu items*/
+
+SELECT recipeName,count(eID) As employeeCount
+from Expertise
+group by recipeName
+ORDER BY count(eID) ASC
+Limit 3;
 
 
+SET FOREIGN_KEY_CHECKS = 0;
 
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 
