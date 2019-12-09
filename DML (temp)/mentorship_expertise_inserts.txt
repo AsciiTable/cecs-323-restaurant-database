@@ -2,23 +2,20 @@
 --Expertise
 insert into Expertise(eID, recipeName)
 values
-(26, 'Chow Mein'),
-(27, 'Egg Foo Young'),
-(33, 'Egg Rolls'),
-(34, 'Egg drop soup');
-
-insert into Expertise(eID, recipeName)
-values
-(27, 'Cream of Mushroom Soup'),
-(26, 'Dumplings'),
-(26, 'Pork buns');
+(39, 'Chow Mein'),
+(40, 'Egg Foo Young'),
+(41, 'Egg Rolls'),
+(39, 'Egg drop soup').
+(39, 'Cream of Mushroom Soup'),
+(40, 'Dumplings'),
+(39, 'Pork buns');
 
 
 --Mentorship
-insert into Mentorship(recipeName, mentorID, menteeID, startDate)
+insert into Mentorship(recipeName, mentorID, menteeID, startDate,)
 values
-('Chow Mein', 26, 27, '2019-11-01'),
-('Egg Foo Young', 27, 26, '2019-11-02'),
-('Egg Rolls', 33, 34, '2019-11-03'),
-('Egg drop soup', 34, 33,  '2019-11-04');
+('Pork Buns', 39, 41, '2019-11-01'),
+('Egg Foo Young', 40, 39, '2019-11-02'),
+('Egg Rolls', 41, 40, '2019-11-03');
+
 
