@@ -509,6 +509,8 @@ CREATE TABLE OrderLine(
 	orderID int NOT NULL,
     /*menuItemID: the ID of the menu item associated with the order line*/
     menuItemID int NOT NULL,
+    /*quantity: the amount of menu items ordered*/
+    quantity int NOT NULL,
     
     CONSTRAINT orderline_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
     CONSTRAINT orderline_fk_2 FOREIGN KEY (menuItemID) REFERENCES MenuItem(menuItemID),
