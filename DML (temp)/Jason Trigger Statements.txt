@@ -1,0 +1,6 @@
+#This trigger makes it so that when you make a to go order with a ready time, then it will automatically 
+#set the ordertime ready to the orderTime + 2 hours. 
+CREATE DEFINER=`cecs323sec1s39`@`10.%` TRIGGER `cecs323sec01bg07`.`ToGoOrder_BEFORE_INSERT` BEFORE INSERT ON `ToGoOrder` FOR EACH ROW
+BEGIN
+		SET new.orderTimeReady = addtime(new.orderTime, "2:00");
+END
