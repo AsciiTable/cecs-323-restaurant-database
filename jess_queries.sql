@@ -23,7 +23,7 @@ USING (custID);
 
 /*b. List the top three customers in terms of their net spending for the past two years, and
 the total that they have spent in that period.*/
-SELECT chequeDate AS 'Date', fName AS 'First Name', lName AS 'Last Name', SUM(price) AS 'Total Spent in Year'
+SELECT chequeDate AS 'Date', fName AS 'First Name', lName AS 'Last Name', SUM(price) AS 'Total Spent for Past Two Years'
 FROM Cheque
 INNER JOIN Person
 ON Cheque.custID = Person.ID
@@ -35,5 +35,6 @@ INNER JOIN MenuItem
 USING (menuItemID)
 WHERE chequeDate >= now() - INTERVAL 2 YEAR
 GROUP BY chequeDate, fName, lName
-ORDER BY fName;
+ORDER BY SUM(price) DESC
+LIMIT 3;
 
