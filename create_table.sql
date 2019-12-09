@@ -203,6 +203,8 @@ CREATE TABLE Mentorship(
     menteeID int NOT NULL,
 	/*startDate: the day that the mentorship started*/
     startDate DATE NOT NULL,
+    /*endDate: the day that the mentorship ended*/
+    endDate DATE,
 
     CONSTRAINT mentorship_fk_1 FOREIGN KEY (menteeID, recipeName) REFERENCES Expertise (eID, recipeName),
     CONSTRAINT mentorship_fk_2 FOREIGN KEY (menteeID) REFERENCES SousChef (eID),
