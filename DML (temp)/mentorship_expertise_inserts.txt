@@ -1,0 +1,212 @@
+--EMPLOYEE INSERT
+insert into Employee (EID, payrate, rolename) Values 
+(26, 15.0,'Waiter'),
+(27, 15.0,'Waiter'),
+(28, 300.0,'Head Chef'),
+(29, 300.0,'Head Chef'),
+(30, 300.0,'Head Chef'),
+(31, 300.0,'Head Chef'),
+(32, 300.0,'Head Chef'),
+(33, 15.0,'Waiter'),
+(34, 15.0,'Waiter'),
+(35, 250.0,'Manager'),
+(36, 250.0,'Manager'),
+(37, 250.0,'Manager'),
+(38, 15.0,'Waiter'),
+(39, 200,'Sous Chef'),
+(40, 200,'Sous Chef'),
+(41, 200,'Sous Chef'),
+(42, 15.0,'Waiter'),
+(43, 150.0,'Line cook'),
+(44, 150.0,'Line cook'),
+(45, 150.0,'Line cook'),
+(46, '15','MaitreD'),
+(47, '15','MaitreD'),
+(48, '15','MaitreD'),
+(49, 10.0,'Dish Washer'),
+(50, 10.0,'Dish Washer');
+
+
+--FULL TIME EMPLOYEES
+insert into fulltimeemployee (EID)
+Values 
+(28),
+(29),
+(30),
+(31),
+(32),
+(35),
+(36),
+(37),
+(39),
+(40),
+(41),
+(43),
+(44),
+(45);
+
+
+--PART TIME EMPLOYEES
+insert into PARTTIMEEMPLOYEE (EID)
+Values 
+(26),
+(27),
+(33),
+(34),
+(38),
+(42),
+(46),
+(47),
+(48),
+(49),
+(50);
+
+--RECIPES
+insert into Recipe (recipeName,CHEFID) Values 
+--meat entree
+('Chow Mein',28),
+('Egg Foo Young',28),
+('Chop Suey',28),
+--Soups
+('Chicken Noddle Soup',29),
+('Tofo Soup',29),
+('Wonton Soup',30),
+('Egg drop Soup',30),
+('Cream of Mushroom Soup',30),
+--appetizers
+('Shrimp Balls',31),
+('Dumplings',31),
+('Egg Rolls',32),
+('Crab Rangoon',32),
+('Lettuce Wraps',32),
+('Pork Buns',32);
+
+
+
+--LINE COOK
+
+insert into linecook (EID,station) Values 
+(43,'Stir Fry'),
+(44,'Mixing'),
+(45,'Boiling');
+
+--MANAGERS
+insert into manager (EID) Values 
+(35),
+(36),
+(37);
+
+--section
+insert into section(EID,sectionnumber)
+values
+(26,1),
+(27,2),
+(33,3),
+(34,4),
+(42,5);
+
+
+--tables
+insert into restauranttable(tablenumber,sectionnumber)
+values
+(1,1),
+(2,1),
+(3,1),
+(4,1),
+(5,1);
+(1,2),
+(2,2),
+(3,2),
+(4,2),
+(5,2);
+(1,3),
+(2,3),
+(3,3),
+(4,3),
+(5,3);
+(1,4),
+(2,4),
+(3,4),
+(4,4),
+(5,4);
+(1,5),
+(2,5),
+(3,5),
+(4,5),
+(5,5);
+
+--seats
+insert into seat(seatunmber,tablenumber,sectionnumber)
+values
+--SECTION1
+(1,1,1),(1,1,2),(1,1,3),(1,1,4),(1,1,5),
+(1,2,1),(1,2,2),(1,2,3),(1,2,4),(1,2,5),
+(1,3,1),(1,3,2),(1,3,3),(1,3,4),(1,3,5),
+(1,4,1),(1,4,2),(1,4,3),(1,4,4),(1,4,5),
+(1,5,1),(1,5,2),(1,5,3),(1,5,4),(1,5,5),
+--SECTION2
+(2,1,1),(2,1,2),(2,1,3),(2,1,4),(2,1,5),
+(2,2,1),(2,2,2),(2,2,3),(2,2,4),(2,2,5),
+(2,3,1),(2,3,2),(2,3,3),(2,3,4),(2,3,5),
+(2,4,1),(2,4,2),(2,4,3),(2,4,4),(2,4,5),
+(2,5,1),(2,5,2),(2,5,3),(2,5,4),(2,5,5),
+--SECTION3
+(3,1,1),(3,1,2),(3,1,3),(3,1,4),(3,1,5),
+(3,2,1),(3,2,2),(3,2,3),(3,2,4),(3,2,5),
+(3,3,1),(3,3,2),(3,3,3),(3,3,4),(3,3,5),
+(3,4,1),(3,4,2),(3,4,3),(3,4,4),(3,4,5),
+(3,5,1),(3,5,2),(3,5,3),(3,5,4),(3,5,5),
+--SECTION4
+(4,1,1),(4,1,2),(4,1,3),(4,1,4),(4,1,5),
+(4,2,1),(4,2,2),(4,2,3),(4,2,4),(4,2,5),
+(4,3,1),(4,3,2),(4,3,3),(4,3,4),(4,3,5),
+(4,4,1),(4,4,2),(4,4,3),(4,4,4),(4,4,5),
+(4,5,1),(4,5,2),(4,5,3),(4,5,4),(4,5,5),
+--SECTION5
+(5,1,1),(5,1,2),(5,1,3),(5,1,4),(5,1,5),
+(5,2,1),(5,2,2),(5,2,3),(5,2,4),(5,2,5),
+(5,3,1),(5,3,2),(5,3,3),(5,3,4),(5,3,5),
+(5,4,1),(5,4,2),(5,4,3),(5,4,4),(5,4,5),
+(5,5,1),(5,5,2),(5,5,3),(5,5,4),(5,5,5);
+
+--WAITERS
+insert into waiters(EID)
+values
+(26),
+(27),
+(33),
+(34),
+(42);
+
+--Sous chefs
+insert into SOUSCHEF(EID)
+values
+(39),
+(40),
+(41);
+
+--shift
+insert into shift(workdate, shifttype, chefid,managerid)
+values
+('2019-12-02','am',28,35),
+('2019-12-03','pm',29,36),
+('2019-12-01','am',30,37),
+('2019-12-07','pm',31,35);
+
+--sectionshift
+insert into sectionshift(workdate,shifttype,sectionnumber,waiterid)
+values
+('2019-12-02','am',1,26),
+('2019-12-03','pm',2,27),
+('2019-12-01','am',3,33),
+('2019-12-01','pm',4,34);
+
+--workschedule
+insert into workschedule(EID,workdate,shifttype)
+values
+(26,'2019-12-02','am'),
+(27,'2019-12-03','pm'),
+(33,'2019-12-01','am'),
+(34,'2019-12-01','pm');
+
+
