@@ -10,8 +10,8 @@ values
 --Mentorship
 insert into Mentorship(recipeName, mentorID, menteeID, startDate)
 values
-('Chow Mein', 26, 27, startDate),
-('Egg Foo Young', 27, 26, startDate),
-('Egg Rolls', 33, 34, startDate),
-('Egg drop soup', 34, 33, startDate);
+('Chow Mein', 26, 27, '2019-11-01'),
+('Egg Foo Young', 27, 26, '2019-11-02'),
+('Egg Rolls', 33, 34, '2019-11-03'),
+('Egg drop soup', 34, 33,  '2019-11-04');
 
