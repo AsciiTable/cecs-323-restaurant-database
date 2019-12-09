@@ -114,26 +114,23 @@ SELECT mentorID, recipeName
 FROM Mentorship
 WHERE enddate IS NULL;
 
-
-
 /*M. Find the three menu items that have the fewest sous chefs skilled in those menu items*/
-
 SELECT recipeName,count(eID) As employeeCount
 from Expertise
 group by recipeName
 ORDER BY count(eID) ASC
 Limit 3;
 
+/*p1. Return the name of the sous chefs that are an expert in a recipe and is teaching it to another sous chef*/
+select Person.fname, Person.lname from Mentorship
+inner join Person
+on Person.ID = Mentorship.mentorID;
+/*p2.Return the name of the head chef that worked at the end of the first week of December during 2019*/
+select Person.fname, Person.lname 
+from Shift
+inner join Person
+on Person.ID = Shift.chefid
+where Shift.workdate = '2019-12-07';
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-
-
-
-
-
-
-
-
+/*p3. Return the orderID, orderTime, orderTimeReady for a to-go order.*/
+select orderID, orderTime, orderTimeReady from ToGoOrder;
