@@ -9,7 +9,7 @@ values
 
 insert into Expertise(eID, recipeName)
 values
-(26, 'Chow Mein');
+(27, 'Chow Mein');
 
 --Mentorship
 insert into Mentorship(recipeName, mentorID, menteeID, startDate)
