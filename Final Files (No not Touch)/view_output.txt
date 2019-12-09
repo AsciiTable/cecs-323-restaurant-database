@@ -1,4 +1,26 @@
+
+#MenuItem_V
+SELECT * FROM cecs323sec01bg07.MenuItem_v;
+
+# Menu, Item, Spiciness, Size, Price
+'Lunch', 'Chicken Noddle Soup', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '5'
+'Children\'s', 'Chop Suey', 'Hot,Mild,Oh My God,Piquant,Tangy', 'K-Medium', '10'
+'Children\'s', 'Chow Mein', 'Hot,Mild,Oh My God,Piquant,Tangy', 'K-Medium', '10'
+'Lunch', 'Crab Rangoon', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '10'
+'Lunch', 'Cream of Mushroom Soup', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '5'
+'Lunch', 'Dumplings', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '10'
+'Lunch', 'Egg Drop Soup', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '5'
+'Children\'s', 'Egg Foo Young', 'Hot,Mild,Oh My God,Piquant,Tangy', 'K-Medium', '10'
+'Lunch', 'Egg Rolls', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '10'
+'Sun Brunch Buffet', 'Lettuce Wraps', 'Hot,Mild,Oh My God,Piquant,Tangy', 'all you can eat', '0'
+'Lunch', 'Pork Buns', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '10'
+'Lunch', 'Shrimp Balls', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '10'
+'Lunch', 'Tofo Soup', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '5'
+'Lunch', 'Wonton Soup', 'Hot,Mild,Oh My God,Piquant,Tangy', 'L-Small', '5'
+
+
 # Customer_address_V
+SELECT * FROM cecs323sec01bg07.Customer_address_v;
 
 # Account, Customer ID, First Name, Last Name, Snail Mail, E-Mail, Department, Corporation ID
 'Individual', '1', 'Jason', 'Tran', '8796 Arnold Street Cincinnati, OH 45211', 'rnewman@optonline.net', 'N/A', 'N/A'
@@ -29,6 +51,9 @@
 
 
 #Customer_Sales_V
+
+SELECT * FROM cecs323sec01bg07.Customer_Sales_V;
+
 # Year, First Name, Last Name, Total Spent in Year
 # custID, fName, lName, total
 '8', 'Linda', 'Beck', '265'
@@ -60,6 +85,9 @@
 
 
 #Customer Value_v
+
+SELECT * FROM cecs323sec01bg07.Customer_Value_v;
+
 # YEAR(chequeDate), custID, fName, lName, total
 '2019', '8', 'Linda', 'Beck', '265'
 '2019', '7', 'Chanice', 'Whiteley', '100'
@@ -89,6 +117,9 @@
 
 
 #Sous_mentor_v
+
+SELECT * FROM cecs323sec01bg07.Sous_mentor_v;
+
 # Mentor First Name, Mentor Last Name, Mentee First Name, Mentee Last Name, Skill, Start Date
 'Arwin', 'Hernandez', 'Walter', 'Peters', 'Egg Foo Young', '2019-11-02'
 'Jaxx', 'Harrison', 'Arwin', 'Hernandez', 'Egg Rolls', '2019-11-03'
