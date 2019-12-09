@@ -84,6 +84,27 @@ FROM Expertise
 INNER JOIN SousChef
 USING (eID));
 
+/*g. List the customers, sorted by the amount of Miming’s Money that they have, from largest
+to smallest.*/
+SELECT fName AS 'Customer First Name', lName AS 'Customer Last Name', (totalSpent/10) - mimingMoneyUsed AS 'Total Miming\'s Money'
+FROM (SELECT fName, lName, SUM(chequeTotal) AS totalSpent, mimingMoneyUsed
+	FROM(SELECT chequeID, custID, SUM(t1.orderTotal) AS chequeTotal, mimingMoneyUsed
+		FROM(SELECT orderID, chequeID,  SUM(quantity*price) AS orderTotal
+			FROM MenuItem
+			INNER JOIN OrderLine
+			USING (menuItemID)
+			INNER JOIN Orders
+			USING (orderID)
+			GROUP BY orderID) t1
+		INNER JOIN Cheque
+		USING (chequeID)
+		GROUP BY chequeID) t2
+	INNER JOIN Person
+	ON t2.custID = Person.ID
+	GROUP BY fName, lName) t3
+ORDER BY (totalSpent/10) - mimingMoneyUsed DESC;
+
+
 
 /*Matt's Queries*/
 /*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
