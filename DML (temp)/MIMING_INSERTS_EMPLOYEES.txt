@@ -95,6 +95,21 @@ values
 (44),
 (45);
 
+--HEAD CHEF
+insert into HeadChef(eID)
+values
+(28),
+(29),
+(30),
+(31),
+(32);
+
+
+
+
+
+
+
 --LINE COOK
 
 insert into linecook (EID,station) Values 
