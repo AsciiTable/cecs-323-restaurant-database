@@ -208,7 +208,7 @@ ORDER BY (totalSpent/10) - mimingMoneyUsed DESC;
 
 #Part h. List the customers and the total that they have spent at Miming’s ever, in descending
 #order by the amount that they have spent.
-
+select * from (
 select custID, sum(priceEach) from(
 select Customer.custID, Cheque.chequeID, MenuItem.menuItemID, price * quantity as priceEach from Customer
 inner join	Cheque 
@@ -221,34 +221,37 @@ inner join MenuItem
 on MenuItem.menuItemID = OrderLine.menuItemID
 group by Customer.custID, Cheque.chequeID, menuItemID) D
 group by custID
-order by sum(priceEach) desc;
+order by sum(priceEach) desc) D
+inner join Person
+on Person.ID = D.custID;
 
-# custID, sum(priceEach)
-'8', '265'
-'7', '100'
-'6', '70'
-'12', '60'
-'22', '60'
-'11', '54'
-'3', '50'
-'21', '48'
-'15', '40'
-'2', '40'
-'16', '30'
-'20', '30'
-'5', '30'
-'25', '30'
-'13', '20'
-'14', '20'
-'1', '20'
-'24', '20'
-'17', '15'
-'18', '15'
-'19', '15'
-'4', '12'
-'23', '10'
-'10', '6'
-'9', '5'
+# custID, sum(priceEach), ID, fName, lName
+'8', '265', '8', 'Linda', 'Beck'
+'7', '100', '7', 'Chanice', 'Whiteley'
+'6', '70', '6', 'Amara', 'Own'
+'12', '60', '12', 'Wilson', 'Mcphee'
+'22', '60', '22', 'Ruairi', 'Bates'
+'11', '54', '11', 'Ocean', 'Mckenna'
+'3', '50', '3', 'Sonia', 'Mcleod'
+'21', '48', '21', 'Arslan', 'Pcikett'
+'15', '40', '15', 'Tia', 'Emonds'
+'2', '40', '2', 'Matthew', 'Pham'
+'25', '30', '25', 'Rocco', 'Braun'
+'16', '30', '16', 'Jessie', 'Koch'
+'20', '30', '20', 'Zoha', 'Sheppard'
+'5', '30', '5', 'Zeynep', 'Lynch'
+'13', '20', '13', 'Lillie', 'Nolan'
+'14', '20', '14', 'Mariya', 'Poole'
+'1', '20', '1', 'Jason', 'Tran'
+'24', '20', '24', 'Cindy', 'Sheehan'
+'17', '15', '17', 'Tillie', 'Hardin'
+'18', '15', '18', 'Sila', 'Strong'
+'19', '15', '19', 'Katerina', 'Conroy'
+'4', '12', '4', 'Siena', 'Prentice'
+'23', '10', '23', 'Brook', 'Morgan'
+'10', '6', '10', 'Makayla', 'Tyler'
+'9', '5', '9', 'Brielle', 'O\'Ryan'
+
 
 #i. Report on the customers at Miming’s by the number of timesthat they come in by month
 #and order the report from most frequent to the least frequent.
@@ -317,32 +320,39 @@ on 	Person.ID = G.custiD;
 '6', 'Amara', 'Own', '70'
 
 #Part K
+select foodItemName, MONEYEARNED from(
 select OrderLine.menuItemID, quantity * price as MONEYEARNED from OrderLine
 inner join	MenuItem
 on	OrderLine.menuItemID = MenuItem.menuItemID
 group by	OrderLine.menuItemID
 order by MONEYEARNED desc
-LIMIT 5;
+LIMIT 5) D
+inner join MenuItem
+on	MenuItem.menuItemID = D.menuItemID;
 
-# menuItemID, MONEYEARNED
-'525', '60'
-'51', '50'
-'653', '48'
-'284', '45'
-'325', '45'
+# foodItemName, MONEYEARNED
+'Dumplings', '60'
+'Egg Foo Young', '50'
+'Cream of Mushroom Soup', '48'
+'Egg Foo Young', '45'
+'Egg Foo Young', '45'
+
 
 /*Matt's Queries*/
 /*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
 the sous chef is passing along to the other sous chefs.*/
 
-SELECT mentorID, recipeName
+SELECT distinct Person.fname,Person.lname, recipeName
 FROM Mentorship
+inner join Person
+on Person.ID = Mentorship.mentorID
 WHERE enddate IS NULL;
 
-# mentorID, recipeName
-'40', 'Egg Foo Young'
-'41', 'Egg Rolls'
-'39', 'Pork Buns'
+# fname, lname, recipeName
+'Walter', 'Peters', 'Crab Rangoon'
+'Arwin', 'Hernandez', 'Egg Foo Young'
+'Jaxx', 'Harrison', 'Egg Rolls'
+
 
 /*M. Find the three menu items that have the fewest sous chefs skilled in those menu items*/
 SELECT recipeName,count(eID) As employeeCount
