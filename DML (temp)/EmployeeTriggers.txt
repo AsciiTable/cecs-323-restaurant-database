@@ -9,7 +9,7 @@ delimiter $$
 create trigger oneMentee before insert on Mentorship
 	for each row
 	BEGIN
-		IF EXISTS (SELECT * FROM Mentorship WHERE Mentorship.mentorID = NEW.mentorID) THEN
+		IF EXISTS (SELECT * FROM Mentorship WHERE Mentorship.mentorID = NEW.mentorID and Mentorship.enddate IS			        NULL) THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Sous chef is already mentoring someone!';
 		END IF;
 	END; $$
@@ -18,7 +18,10 @@ delimiter;
 
 
 2. When assigning sections per shift, this trigger makes sure that the right employee is working that shift
-
+/*
+This trigger should be preventing the user from editing the sectionshift table. If it is edited, then it is inconsistent with 
+all the other data.
+It checks if that row exists and if it does, it rejects the user's update to the row./*
 delimiter $$
 create trigger rightWaiter before update of waiterID ON sectionshift
 	for each row
@@ -30,13 +33,24 @@ create trigger rightWaiter before update of waiterID ON sectionshift
 		END IF;
 	END; $$
 delimiter;
+
 		
---TRIGGER TESTS (THEY SHOULD FAIL)
+--TRIGGER TESTS 
 
 --FOR ONEMENTEE
 insert into Mentorship(recipename, mentorID, menteeID, startdate)
 values
 (Crab Rangoon, 39,41,'2019-11-01');
+
+--THIS ONE SHOULD GO THROUGH AND BE FINE
+UPDATE Mentorship
+SET enddate = '2019-11-02'
+WHERE mentorID = 39;
+
+insert into Mentorship(recipeName, mentorID, menteeID, startDate,)
+values
+('Crab Rangoon', 39, 41, '2019-12-01');
+
 
 --FOR RIGHTWAITER
 UPDATE sectionshift
