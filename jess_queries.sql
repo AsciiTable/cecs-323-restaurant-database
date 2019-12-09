@@ -62,6 +62,29 @@ INNER JOIN Person p2
 ON t1.Chef2 = p2.ID
 WHERE t1.Pairs >= 3;
 
+/*f. List all the menu items, the shift in which the menu item was ordered, and the sous chef
+on duty at the time, when the sous chef was not an expert in that menu item.*/
+SELECT foodItemName AS 'Food Item', menuType AS 'Menu', spiceLevel AS 'Spice Level', size AS 'Size', workDate AS 'Day Ordered', shiftType AS 'Time Ordered', fName AS 'Sous Chef First Name', lName AS 'Sous Chef Last Name'
+FROM MenuItem
+INNER JOIN OrderLine
+USING (menuItemID)
+INNER JOIN Orders
+USING (orderID)
+INNER JOIN Cheque
+USING (chequeID)
+INNER JOIN Shift
+ON Cheque.chequeDate = Shift.workDate
+INNER JOIN WorkSchedule
+USING (workDate, shiftType)
+INNER JOIN Person
+ON WorkSchedule.eID = Person.ID
+WHERE foodItemName NOT IN
+(SELECT recipename
+FROM Expertise
+INNER JOIN SousChef
+USING (eID));
+
+
 /*Matt's Queries*/
 /*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
 the sous chef is passing along to the other sous chefs.*/
