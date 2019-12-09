@@ -3,7 +3,7 @@
 that item. If a given item is not on a particular menu, then report “N/A” for that particular
 item for that particular menu. Also, if an item only appears as a single serving portion,
 put in “N/A” into the report for the gallon, … prices.*/
-/*CREATE VIEW MenuItem_v AS*/
+CREATE VIEW MenuItem_v AS
 SELECT menuType AS Menu, foodItemName AS Item, GROUP_CONCAT(DISTINCT spiceLevel) AS Spiciness, size AS Size, price AS Price
 FROM MenuItem
 GROUP BY foodItemName;
