@@ -1,5 +1,5 @@
 
-9. A sous chef can only mentor one person at a time.
+1. A sous chef can only mentor one person at a time.
 
 /*
 Trigger keeps users from allowing a sous chef to mentor more than one person at a time.
@@ -17,5 +17,17 @@ delimiter;
 
 
 
+2. When assigning sections per shift, this trigger makes sure that the right employee is working that shift
 
-10. 
+delimiter $$
+create trigger rightWaiter before update of waiterID ON sectionshift
+	for each row
+	BEGIN
+		IF EXISTS(SELECT * FROM SECTIONSHIFT 
+			  INNER JOIN workschedule 
+		          ON sectionshift.waiterid = workschedule.EID AND sectionshift.workdate = workschedule.workdate) THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You cannot update the rows in this table!';
+		END IF;
+	END; $$
+delimiter;
+		
