@@ -7,6 +7,14 @@ put in “N/A” into the report for the gallon, … prices.*/
 SELECT menuType AS Menu, foodItemName AS Item, spiceLevel AS Spiciness, size AS Size, price AS Price
 FROM MenuItem;
 
+SELECT foodItemName AS Item, GROUP_CONCAT(DISTINCT menuType) AS Menus,GROUP_CONCAT(DISTINCT spiceLevel) AS Spiciness, GROUP_CONCAT(DISTINCT size) AS Sizes, GROUP_CONCAT(DISTINCT price) AS Prices
+FROM MenuItem
+GROUP BY foodItemName;
+
+SELECT foodItemName,  GROUP_CONCAT(DISTINCT menuType),GROUP_CONCAT(DISTINCT spiceLevel), COALESCE(size, 'N/A'), GROUP_CONCAT(DISTINCT price)
+FROM MenuItem
+GROUP BY foodItemName;
+
 /*Customer_addresses_v – for each customer, indicate whether they are an individual or a
 corporate account, and display all of the information that we are managing for that
 customer.*/
