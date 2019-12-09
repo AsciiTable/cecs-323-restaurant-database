@@ -31,3 +31,14 @@ create trigger rightWaiter before update of waiterID ON sectionshift
 	END; $$
 delimiter;
 		
+--TRIGGER TESTS (THEY SHOULD FAIL)
+
+--FOR ONEMENTEE
+insert into Mentorship(recipename, mentorID, menteeID, startdate)
+values
+(Crab Rangoon, 39,41,'2019-11-01');
+
+--FOR RIGHTWAITER
+UPDATE sectionshift
+SET waiterid = 24
+WHERE waiterid = 23;
