@@ -42,8 +42,13 @@ LIMIT 3;
 each sous chef, list their name, the number of menu items that they can prepare, and
 each of the menu items. You can use group_concat to get all of a given sous chef’s data
 on one row, or print out one row per sous chef per menu item.*/
-
-
+SELECT fName AS 'First Name', lName AS 'Last Name', COUNT(recipeName) AS '# of Recipes', GROUP_CONCAT(recipeName) AS 'Recipes'
+FROM Expertise
+INNER JOIN SousChef
+USING (eID)
+INNER JOIN Person 
+ON SousChef.eID = Person.ID
+GROUP BY eID;
 
 
 
