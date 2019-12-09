@@ -236,4 +236,13 @@ values
 (33,'2019-12-01','am'),
 (34,'2019-12-01','pm');
 
+insert into lookup_role(roleNAME)
+values
+('Waiter'),
+('Head Chef'),
+('Manager'),
+('Sous Chef'),
+('Line Cook'),
+('MaitreD'),
+('Dish Washer');
 
