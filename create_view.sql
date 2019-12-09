@@ -60,7 +60,6 @@ ORDER BY YEAR(chequeDate);
 
 /*Customer_Value_v – List each customer and the total $ amount of their orders for the
 past year, in order of the value of customer orders, from highest to the lowest.*/
-SELECT * FROM Customer_Value_v;
 CREATE VIEW Customer_Value_v AS
 SELECT chequeDate AS 'Date', fName AS 'First Name', lName AS 'Last Name', SUM(price) AS 'Total Spent in Year'
 FROM Cheque
