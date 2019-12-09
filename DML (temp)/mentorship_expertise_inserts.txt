@@ -10,6 +10,15 @@ values
 (40, 'Dumplings'),
 (39, 'Pork buns');
 
+insert into Expertise(eID, recipeName)
+values
+(39, 'Crab Rangoon'),
+(39, 'Tofo Soup'),
+(39, 'Wonton Soup'),
+(40, 'Crab Rangoon'),
+(40, 'Tofo Soup'),
+(40, 'Wonton Soup');
+
 
 --Mentorship
 insert into Mentorship(recipeName, mentorID, menteeID, startDate,)
