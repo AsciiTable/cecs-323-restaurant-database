@@ -1,0 +1,6 @@
+insert into WebOrder (orderID) values
+(1),
+(2),
+(3),
+(4),
+(5);
