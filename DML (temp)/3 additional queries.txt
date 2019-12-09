@@ -1,0 +1,19 @@
+3 ADDITIONAL QUERIES
+
+1)Return the name of the sous chefs that are an expert in a recipe and is teaching it to another sous chef
+
+select Person.fname, Person.lname from Mentorship
+inner join Person
+on Person.ID = Mentorship.mentorID;
+
+2)Return the name of the head chef that worked at the end of the first week of December during 2019
+
+select Person.fname, Person.lname 
+from shift
+inner join Person
+on Person.ID = shift.chefid
+where shift.workdate = '2019-12-07'
+
+3)Return the orderID, orderTime, orderTimeReady for a to-go order.
+
+select orderID, orderTime, orderTimeReady from ToGoOrder;
