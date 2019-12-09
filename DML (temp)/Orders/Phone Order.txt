@@ -1,0 +1,6 @@
+insert into PhoneOrder (orderID, phoneNumber) values
+(6, 7142340234),
+(7, 6052942394),
+(8, 5629360293),
+(9, 5624601942),
+(10, 7146072395);

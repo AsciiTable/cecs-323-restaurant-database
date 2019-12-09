@@ -18,3 +18,5 @@
 8. When they enter in the all you can eat buffet, then set a price
 
 9. Only dine in orders can only have multiple orders 
+
+10. Once the first menu item is entered, then that sets the precendent 

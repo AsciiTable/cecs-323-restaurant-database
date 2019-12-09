@@ -1,0 +1,15 @@
+insert into ToGoOrder (orderID, orderTime) values
+#6 - 15 To go Orders
+#6 - 10 Phone Orders
+#11 - 15 In Person Order
+(6, "10:15"),
+(7, "10:25"),
+(8, "11:40"),
+(9, "12:00"),
+(10, "13:20"),
+(11, "13:50"),
+(12, "14:20"),
+(13, "15:45"),
+(14, "17:35"),
+(15, "18:35");
+
