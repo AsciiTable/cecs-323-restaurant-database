@@ -289,7 +289,7 @@ CREATE TABLE Seat(
     sectionNumber int NOT NULL,
     
     CONSTRAINT seat_fk_1 FOREIGN KEY (tableNumber, sectionNumber) REFERENCES ResturantTable (tableNumber, sectionNumber),
-    CONSTRAINT seat_pk PRIMARY KEY (seatNumber, tableNumber)
+    CONSTRAINT seat_pk PRIMARY KEY (seatNumber, tableNumber, sectionNumber)
 );
 /* Creates Section Shift table
 	Holds the work date, shift type, section number, and employee ID of the waiter*/
@@ -377,9 +377,11 @@ CREATE TABLE DineInOrder(
     seatNumber int NOT NULL,
     /*tabelNum: the table the order belongs to*/
     tableNumber int NOT NULL,
+    /*sectopmNum: the section the order belongs to*/
+    sectionNumber int NOT NULL,
     
     CONSTRAINT diorder_fk_1 FOREIGN KEY (orderID) REFERENCES Orders (orderID),
-    CONSTRAINT diorder_fk_2 FOREIGN KEY (seatNumber, tableNumber) REFERENCES Seat (seatNumber, tableNumber),
+    CONSTRAINT diorder_fk_2 FOREIGN KEY (seatNumber, tableNumber, sectionNumber) REFERENCES Seat (seatNumber, tableNumber, sectionNumber),
     CONSTRAINT diroder_pk PRIMARY KEY (orderID)
 );
 /* --------------------------- END CHEQUE/ORDER SECTION --------------------------- */
