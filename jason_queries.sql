@@ -22,7 +22,7 @@ select fname, lname, "Corporate Representative" as Category from Customer
 inner join	CorporateRepresentative
 on	Customer.custID = CorporateRepresentative.custID
 inner join Person
-on Customer.custID = Person.ID
+on Customer.custID = Person.ID;
 
 
 #Part K
