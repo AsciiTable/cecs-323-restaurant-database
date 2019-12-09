@@ -16,3 +16,5 @@
 7. We have traditional sizes for the soup but also volume sizes 
 
 8. When they enter in the all you can eat buffet, then set a price
+
+9. Only dine in orders can only have multiple orders 
