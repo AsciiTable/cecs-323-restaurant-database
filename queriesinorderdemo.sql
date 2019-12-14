@@ -63,13 +63,16 @@ ON t1.Chef2 = p2.ID
 WHERE t1.Pairs >= 3;
 
 #Part E
-select OrderLine.menuItemID, sum(OrderLine.quantity) from OrderLine
+select foodItemName, spiceLevel, totalOrdered from (
+select OrderLine.menuItemID, sum(OrderLine.quantity) as totalOrdered from OrderLine
 inner join	MenuItem
 on	OrderLine.menuItemID = MenuItem.menuItemID
 where	menuType = "Children's"
 group by	OrderLine.menuItemID
 order by sum(OrderLine.quantity) desc
-limit 3;
+limit 3) D
+inner join	MenuItem
+on MenuItem.menuItemID = D.menuItemID;
 
 
 /*f. List all the menu items, the shift in which the menu item was ordered, and the sous chef
@@ -117,6 +120,7 @@ ORDER BY (totalSpent/10) - mimingMoneyUsed DESC;
 #Part h. List the customers and the total that they have spent at Miming’s ever, in descending
 #order by the amount that they have spent.
 
+select * from (
 select custID, sum(priceEach) from(
 select Customer.custID, Cheque.chequeID, MenuItem.menuItemID, price * quantity as priceEach from Customer
 inner join	Cheque 
@@ -129,7 +133,9 @@ inner join MenuItem
 on MenuItem.menuItemID = OrderLine.menuItemID
 group by Customer.custID, Cheque.chequeID, menuItemID) D
 group by custID
-order by sum(priceEach) desc;
+order by sum(priceEach) desc) D
+inner join Person
+on Person.ID = D.custID;
 
 #i. Report on the customers at Miming’s by the number of timesthat they come in by month
 #and order the report from most frequent to the least frequent.
@@ -165,19 +171,25 @@ on 	F.chequeID = Cheque.chequeID) G
 inner join Person
 on 	Person.ID = G.custiD;
 
+
 #Part K
+select foodItemName, MONEYEARNED from(
 select OrderLine.menuItemID, quantity * price as MONEYEARNED from OrderLine
 inner join	MenuItem
 on	OrderLine.menuItemID = MenuItem.menuItemID
 group by	OrderLine.menuItemID
 order by MONEYEARNED desc
-LIMIT 5;
+LIMIT 5) D
+inner join MenuItem
+on	MenuItem.menuItemID = D.menuItemID;
 
 /*L. Find the sous chef who is mentoring the most other sous chef. List the menu items that
 the sous chef is passing along to the other sous chefs.*/
 
-SELECT mentorID, recipeName
+SELECT distinct Person.fname,Person.lname, recipeName
 FROM Mentorship
+inner join Person
+on Person.ID = Mentorship.mentorID
 WHERE enddate IS NULL;
 
 /*M. Find the three menu items that have the fewest sous chefs skilled in those menu items*/
